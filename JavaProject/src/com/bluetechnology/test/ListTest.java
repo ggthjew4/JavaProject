@@ -79,7 +79,7 @@ public class ListTest {
 		// testEndTime[3] = System.currentTimeMillis();
 		System.out.println("array list time : " + ((testEndTime[0] - testBaginTime[0]) / 1000) + " sec");
 		System.out.println("array link time : " + ((testEndTime[1] - testBaginTime[1]) / 1000) + " sec");
-		// System.out.println("array list sort time : " + (testEndTime[2] - testBaginTime[2]));
+		 System.out.println("array list sort time : " + (testEndTime[2] - testBaginTime[2]));
 		// System.out.println("array link sort time : " + (testEndTime[3] - testBaginTime[3]));
 	}
 }
