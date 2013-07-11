@@ -64,17 +64,32 @@ public class ListTest {
 	void testListAdd() {
 		testBaginTime[0] = System.currentTimeMillis();
 		for (int i = 0; i < dataSize; i++) {
-			arraylist.add(random.nextInt(dataSize));
+			arraylist.add(i,random.nextInt(dataSize));
 		}
 		testEndTime[0] = System.currentTimeMillis();
 		testBaginTime[1] = System.currentTimeMillis();
 		for (int i = 0; i < dataSize; i++) {
-			linklist.add(random.nextInt(dataSize));
+			linklist.add(i,random.nextInt(dataSize));
 		}
 		testEndTime[1] = System.currentTimeMillis();
 		System.out.println("ArrayList time : " + ((testEndTime[0] - testBaginTime[0]) / 1000) + " sec");
 		System.out.println("LinkedList time : " + ((testEndTime[1] - testBaginTime[1]) / 1000) + " sec");
 	};
+	
+	void testListHeadAdd(){
+		testBaginTime[0] = System.currentTimeMillis();
+		for (int i = 0; i < dataSize; i++) {
+			arraylist.add(0,random.nextInt(dataSize));
+		}
+		testEndTime[0] = System.currentTimeMillis();
+		testBaginTime[1] = System.currentTimeMillis();
+		for (int i = 0; i < dataSize; i++) {
+			linklist.add(0,random.nextInt(dataSize));
+		}
+		testEndTime[1] = System.currentTimeMillis();
+		System.out.println("ArrayList time : " + ((testEndTime[0] - testBaginTime[0]) / 1000) + " sec");
+		System.out.println("LinkedList time : " + ((testEndTime[1] - testBaginTime[1]) / 1000) + " sec");
+	}
 
 	public static void main(String[] args) throws InterruptedException {
 //		// 紀錄list查詢資料時間
@@ -134,6 +149,6 @@ public class ListTest {
 //		System.out.println("array link time : " + ((testEndTime[1] - testBaginTime[1]) / 1000) + " sec");
 //		System.out.println("array list sort time : " + (testEndTime[2] - testBaginTime[2]));
 		// System.out.println("array link sort time : " + (testEndTime[3] - testBaginTime[3]));
-		new ListTest().testListAdd();
+		new ListTest().testListHeadAdd();
 	}
 }

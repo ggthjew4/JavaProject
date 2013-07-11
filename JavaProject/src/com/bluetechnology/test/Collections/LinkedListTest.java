@@ -9,8 +9,9 @@ public class LinkedListTest {
 		linkedList.add("test2");
 		linkedList.add("test3");
 		linkedList.add("test4");
-		System.out.println(linkedList.getFirst());
-		System.out.println(linkedList.element());
+		System.out.println("獲得第一筆資料  getFirst 版 : "+linkedList.getFirst());
+		System.out.println("獲得第一筆資料  element 版 : "+linkedList.element());
+		System.out.println("獲得第一筆資料  peek 版 : "+linkedList.peek());
 		System.out.println("linedList offer test : "+linkedList.offer("test1"));
 		System.out.println("linedList offerLast test : "+linkedList.offerLast("test1"));
 		System.out.println("linedList add add : "+linkedList.add("test5"));

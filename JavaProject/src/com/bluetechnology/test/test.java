@@ -34,11 +34,18 @@ public class test implements Serializable{
 	public static void main(String[] args) {
 		System.out.println("ee");
 		List<test> testList = new ArrayList<test>();
-		testList.add(new test());
-		testList.add(new test());
-		// testList.add("2");
-		// testList.add("3");
-		// testList.add("4");
+		test test1 = new test();
+		test test2 = new test();
+		test test3 = new test();
+		test test4 = new test();
+		test1.setVideoDate("01");
+		test2.setVideoDate("002");
+		test3.setVideoDate("003");
+		test4.setVideoDate("004");
+		testList.add(test1);
+		testList.add(test2);
+		testList.add(test3);
+		testList.add(test4);
 		Collections.sort(testList, new Comparator<test>() {
 			@Override
 			public int compare(test o1, test o2) {
@@ -46,6 +53,10 @@ public class test implements Serializable{
 				return o1.getVideoDate().compareTo(o2.getVideoDate());
 			}
 		});
+		for (test test : testList) {
+			System.out.println(test.getVideoDate());
+		}
+		
 	}
 
 	public String getVideoDate() {
