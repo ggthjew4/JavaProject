@@ -6,21 +6,39 @@
 	http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
 
 	<http auto-config="true" entry-point-ref="loginUrlEntryPoint" access-denied-page="/accessDenied">
+		<custom-filter position="PRE_AUTH_FILTER" ref="siteminderFilter" />
 		<intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/expire" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/accessDenied" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/welcome" access="ROLE_ADMIN,ROLE_USER" />
 		<intercept-url pattern="/css/**" filters="none" />
+		<intercept-url pattern="/ssoLogin" filters="none" />
 		<intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER" />
 		<form-login login-processing-url="/j_spring_security_check"
-			default-target-url="/welcome" authentication-failure-url="/login.jsp"
+			default-target-url="/welcome" authentication-failure-url="/login"
 			always-use-default-target='true' />
-		<logout logout-success-url="/logout"/>
+		<logout logout-success-url="/logout" />
 	</http>
 
+	<beans:bean id="siteminderFilter"
+		class="org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter">
+		<beans:property name="principalRequestHeader" value="SM_USER" />
+		<beans:property name="exceptionIfHeaderMissing" value="false" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+	</beans:bean>
 
-	<authentication-manager>
-		<authentication-provider>
+	<beans:bean id="preauthAuthProvider"
+		class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+		<beans:property name="preAuthenticatedUserDetailsService">
+			<beans:bean id="userDetailsServiceWrapper"
+				class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+				<beans:property name="userDetailsService" ref="userDetailsService" />
+			</beans:bean>
+		</beans:property>
+	</beans:bean>
+	
+	<authentication-manager alias="authenticationManager">
+		<authentication-provider ref="preauthAuthProvider">
 			<jdbc-user-service data-source-ref="dataSource"
 				users-by-username-query="
 		      select username,password, enable 
@@ -31,7 +49,7 @@
 		</authentication-provider>
 	</authentication-manager>
 
-	<beans:bean id="btUserDetailService" class="com.bt.security.BTUserDetailService"></beans:bean>
+	<beans:bean id="userDetailsService" class="com.bt.security.BTUserDetailService"/>
 
 	<beans:bean id="loginUrlEntryPoint"
 		class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
