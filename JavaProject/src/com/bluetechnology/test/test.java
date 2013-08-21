@@ -2,14 +2,11 @@ package com.bluetechnology.test;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class test implements Serializable{
+public class Test implements Serializable{
 	/**
 	 * 
 	 */
@@ -19,43 +16,51 @@ public class test implements Serializable{
 	private Matcher				matcher;
 	private String				videoDate;
 
-	test() {
+	Test() {
 		pattern = Pattern.compile(EMAIL_PATTERN);
 	}
-
-	public void test() {
-		Arrays.<String> asList(null);
+	
+	Test(final String videoDate ){
+		this.videoDate = videoDate;
 	}
+	
+	class Person{
+		
+		private String name;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		
+	}
+
 
 	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("ee");
-		List<test> testList = new ArrayList<test>();
-		test test1 = new test();
-		test test2 = new test();
-		test test3 = new test();
-		test test4 = new test();
-		test1.setVideoDate("01");
-		test2.setVideoDate("002");
-		test3.setVideoDate("003");
-		test4.setVideoDate("004");
-		testList.add(test1);
-		testList.add(test2);
-		testList.add(test3);
-		testList.add(test4);
-		Collections.sort(testList, new Comparator<test>() {
-			@Override
-			public int compare(test o1, test o2) {
-				// TODO Auto-generated method stub
-				return o1.getVideoDate().compareTo(o2.getVideoDate());
-			}
-		});
-		for (test test : testList) {
-			System.out.println(test.getVideoDate());
+		
+		Test person1 = new Test("gggg");
+		Test person2 = new Test("kkkk");
+		Test person3 = new Test("uuuu");
+		List<Test> list = new ArrayList<Test>();
+		list.add(person1);
+		list.add(person2);
+		list.add(person3);
+		list.set(0,person3);
+		int index = list.indexOf(person3);
+		System.out.println(index);
+		for(Test vo: list){
+			System.out.println(vo.hashCode());
+			System.out.println(vo.getVideoDate());	
 		}
+		
 		
 	}
 
