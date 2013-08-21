@@ -9,15 +9,16 @@ public class BTUserDetails implements UserDetails {
 	private static final long	serialVersionUID	= 5229206868112838662L;
 	private String				username;
 	private String				password;
+	private Collection<GrantedAuthority> grantedAuthoritys;
 
-	public BTUserDetails(final String username, final String password) {
+	public BTUserDetails(final String username, final String password,final Collection<GrantedAuthority> grantedAuthoritys) {
 		this.username = username;
 		this.password = password;
+		this.grantedAuthoritys = grantedAuthoritys;
 	}
 
 	public Collection<GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
+		return grantedAuthoritys;
 	}
 
 	public String getPassword() {
@@ -32,21 +33,21 @@ public class BTUserDetails implements UserDetails {
 
 	public boolean isAccountNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isAccountNonLocked() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isCredentialsNonExpired() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 }
