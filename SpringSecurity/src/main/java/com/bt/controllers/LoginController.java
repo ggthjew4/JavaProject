@@ -42,7 +42,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(ModelMap model) {
-		return "index";
+		return "login";
 	}
 	
 	

@@ -57,5 +57,6 @@
          <button name="submit" type="submit" value="Login" class="btn btn-large btn-primary">Login</button>
       </form>
    </div>
+   <c:set var="SPRING_SECURITY_LAST_EXCEPTION" scope="session" value="${null}"/>
 </body>
 </html>

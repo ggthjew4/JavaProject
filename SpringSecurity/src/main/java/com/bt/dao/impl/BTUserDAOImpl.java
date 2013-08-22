@@ -19,4 +19,9 @@ public class BTUserDAOImpl implements IBTUserDAO {
 		final String sql = "select users.username,users.password,users.enable,user_roles.authority from users INNER JOIN user_roles on users.id = user_roles.user_id where users.username=? ";
 		return jdbcTemplate.query(sql, new String[] { username }, new UserRowMapper());
 	}
+
+	public String getUserPassword(String username) {
+		final String sql = "select users.password from users where users.username = ? ";
+		return jdbcTemplate.queryForObject(sql,new String[] {username},String.class);
+	}
 }

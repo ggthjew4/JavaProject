@@ -21,12 +21,7 @@ public class LoginBOImpl implements ILoginBO {
 	}
 
 	public String getUserPassword(final String username) {
-		Map<String, String> userMap = new HashMap<String, String>();
-		userMap.put("user", "user");
-		userMap.put("user2", "user2");
-		userMap.put("user3", "user3");
-		userMap.put("admin", "admin");
-		return userMap.get(username);
+		return userDAO.getUserPassword(username);
 	}
 
 	public List<User> getUserInfo(final String username) {
