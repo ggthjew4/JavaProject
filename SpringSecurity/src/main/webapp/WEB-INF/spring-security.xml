@@ -5,29 +5,20 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
 
-	<http auto-config="false" entry-point-ref="loginUrlEntryPoint"
+	<http auto-config="true" entry-point-ref="loginUrlEntryPoint"
 		access-denied-page="/accessDenied">
 		<intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/expire" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/accessDenied" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-		<intercept-url pattern="/welcome" access="ROLE_ADMIN,ROLE_USER" />
+		<intercept-url pattern="/welcome" access="IS_AUTHENTICATED_FULLY" />
+		<intercept-url pattern="/logout"  filters="none" />
 		<intercept-url pattern="/css/**" filters="none" />
 		<intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER" />
+		<custom-filter position="PRE_AUTH_FILTER" ref="siteminderFilter" />
 		<custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
-		<custom-filter position="FORM_LOGIN_FILTER"
-			ref="btUsernamePasswordAuthenticationFilter" />
+		<custom-filter ref="loginFilter" before="FORM_LOGIN_FILTER"/>
 		<logout logout-success-url="/logout" />
 	</http>
-
-	<!-- <beans:bean id="siteminderFilter" class="org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter"> 
-		<beans:property name="principalRequestHeader" value="SM_USER" /> <beans:property 
-		name="exceptionIfHeaderMissing" value="false" /> <beans:property name="authenticationManager" 
-		ref="authenticationManager" /> </beans:bean> <beans:bean id="preauthAuthProvider" 
-		class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider"> 
-		<beans:property name="preAuthenticatedUserDetailsService"> <beans:bean id="userDetailsServiceWrapper" 
-		class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper"> 
-		<beans:property name="userDetailsService" ref="userDetailsService" /> </beans:bean> 
-		</beans:property> </beans:bean> -->
 
 	<beans:bean id="concurrencyFilter"
 		class="org.springframework.security.web.session.ConcurrentSessionFilter">
@@ -35,29 +26,8 @@
 		<beans:property name="expiredUrl" value="/expire" />
 	</beans:bean>
 
-	<beans:bean id="customAuthProvider"
-		class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
-		<beans:property name="preAuthenticatedUserDetailsService">
-			<beans:bean id="userDetailsServiceWrapper"
-				class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
-				<beans:property name="userDetailsService" ref="userDetailsService" />
-			</beans:bean>
-		</beans:property>
-	</beans:bean>
-
-	<beans:bean id="sessionRegistry"
-		class="org.springframework.security.core.session.SessionRegistryImpl" />
-	<beans:bean id="sas"
-		class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
-		<beans:constructor-arg name="sessionRegistry"
-			ref="sessionRegistry" />
-		<beans:property name="exceptionIfMaximumExceeded"
-			value="true" />
-		<beans:property name="maximumSessions" value="1" />
-	</beans:bean>
-
-	<beans:bean id="btUsernamePasswordAuthenticationFilter"
-		class="com.bt.filter.BtUsernamePasswordAuthenticationFilter">
+	<beans:bean id="loginFilter"
+		class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
 		<beans:property name="authenticationManager" ref="authenticationManager" />
 		<beans:property name="authenticationSuccessHandler"
 			ref="authenticationSuccessHandler" />
@@ -76,11 +46,45 @@
 		<beans:property name="defaultFailureUrl" value="/login" />
 	</beans:bean>
 
+	<beans:bean id="sessionRegistry"
+		class="org.springframework.security.core.session.SessionRegistryImpl" />
+	<beans:bean id="sas"
+		class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+		<beans:constructor-arg name="sessionRegistry"
+			ref="sessionRegistry" />
+		<beans:property name="exceptionIfMaximumExceeded"
+			value="true" />
+		<beans:property name="maximumSessions" value="1" />
+	</beans:bean>
+
+	<beans:bean id="siteminderFilter"
+		class="org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter">
+		<beans:property name="principalRequestHeader" value="SM_USER" />
+		<beans:property name="exceptionIfHeaderMissing" value="false" />
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+	</beans:bean>
+
+	<beans:bean id="preauthAuthProvider"
+		class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
+		<beans:property name="preAuthenticatedUserDetailsService">
+			<beans:bean id="userDetailsServiceWrapper"
+				class="org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper">
+				<beans:property name="userDetailsService" ref="userDetailsService" />
+			</beans:bean>
+		</beans:property>
+	</beans:bean>
+	
+	<beans:bean id="usernamePasswordProvider"
+		class="com.bt.security.provider.BTCustomerAuthenticationProvider">
+		<beans:property name="userDetailsService" ref="userDetailsService"/>
+		<beans:property name="passwordEncoder" ref="md5PasswordEncoder"/>
+	</beans:bean>
+	
+	<beans:bean id="md5PasswordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
 
 	<authentication-manager alias="authenticationManager">
-		<authentication-provider user-service-ref="userDetailsService">
-			<password-encoder hash="md5" />
-		</authentication-provider>
+		<authentication-provider ref="preauthAuthProvider"/>
+		<authentication-provider ref="usernamePasswordProvider"/>
 	</authentication-manager>
 
 	<beans:bean id="userDetailsService" class="com.bt.security.BTUserDetailService" />

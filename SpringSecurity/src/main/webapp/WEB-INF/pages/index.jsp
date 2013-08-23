@@ -6,21 +6,55 @@
    <head>
       <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
       <link rel="stylesheet" type="text/css" href="<c:url value="/css/bootstrap.css" />">
-      <link rel="stylesheet" type="text/css" href="<c:url value="/css/bootstrap-responsive.min.css" />">
-      <title>Login Page Index</title>
+      <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+
+      @media (max-width: 980px) {
+        /* Enable use of floated navbar text */
+        .navbar-text.pull-right {
+          float: none;
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+      </style>
+      <title>功能表</title>
    </head>
    <body>
       <sec:authentication property="authorities" var="authorities" scope="page"/>
-      <p><a href="<c:url value="/j_spring_security_logout"/>">登出</a></p>
-      <sec:authorize ifAnyGranted="ROLE_USER">
-        <p><a>電影介紹</a></a></p>
-        <p><a>場次查詢</a></a></p>
-        <p><a>線上訂票</a></a></p>
-      </sec:authorize><br>
-      <sec:authorize ifAnyGranted="ROLE_ADMIN">
-        <p><a>電影維護</a></a></p>
-        <p><a>場次維護</a></a></p>
-        <p><a>帳戶管理</a></a></p>
-      </sec:authorize>
+      <div class="container-fluid">
+         <div class="row-fluid">
+         <p><a href="<c:url value="/j_spring_security_logout"/>">登出</a></p>
+          <sec:authorize ifAnyGranted="ROLE_USER">
+            <div class="span4">
+               <p><a>電影介紹</a></a></p>
+            </div>
+            <div class="span4">
+               <p><a>場次查詢</a></a></p>
+            </div>
+            <div class="span4">
+               <p><a>線上訂票</a></a></p>
+            </div>
+          </sec:authorize>
+          <sec:authorize ifAnyGranted="ROLE_ADMIN">
+            <div class="span4">
+               <p><a>電影維護</a></a></p>
+            </div>
+            <div class="span4">
+               <p><a>場次維護</a></a></p>
+            </div>
+            <div class="span4">
+               <p><a>帳戶管理</a></a></p>
+            </div>
+           </sec:authorize>
+         </div>
+
+      </div>
    </body>
 </html>

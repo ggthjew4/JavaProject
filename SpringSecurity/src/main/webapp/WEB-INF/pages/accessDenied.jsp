@@ -8,7 +8,6 @@
 </head>
 <body>
 <h1>
-Access Denied
 ${requestScope['SPRING_SECURITY_403_EXCEPTION'].message}
 </h1>
 </body>

@@ -14,12 +14,12 @@ public class BTCustomerAuthenticationProvider extends DaoAuthenticationProvider 
 	private String roleAdminAuthority = "ROLE_ADMIN";
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+		super.additionalAuthenticationChecks(userDetails, authentication);
 		Collection<GrantedAuthority> list = userDetails.getAuthorities();
 		for (GrantedAuthority authority : list) {
 			if (roleAdminAuthority.equals(authority.getAuthority())) {
-				throw new BadCredentialsException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "BT Admin credentials"), super.isIncludeDetailsObject() ? userDetails : null);
+				throw new BadCredentialsException(messages.getMessage("bt.badCredentials.admin.login.error", "BT Admin credentials"), super.isIncludeDetailsObject() ? userDetails : null);
 			}
 		}
-		super.additionalAuthenticationChecks(userDetails, authentication);
 	}
 }

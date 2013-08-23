@@ -38,14 +38,13 @@
       }
 
     </style>
-    <link href="<c:url value="/css/bootstrap-responsive.css" />" rel="stylesheet">
 
-<title>Insert title here</title>
+<title>登入</title>
 </head>
 <body>
-   <H1>${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message}</H1>
    <div class="container">
       <form class="form-signin" name='f' action="<c:url value='j_spring_security_check' />" method='POST'>
+         <font style="color:red">${sessionScope['SPRING_SECURITY_LAST_EXCEPTION'].message}</font>
          <h2 class="form-signin-heading">Please sign in</h2>
          User:
          <input type='text' class="input-block-level" name='j_username' value=''>

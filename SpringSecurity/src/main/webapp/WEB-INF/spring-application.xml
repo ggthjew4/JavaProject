@@ -4,5 +4,5 @@
 	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
     <import resource="spring-dataSource.xml" />
 	<import resource="mvc-dispatcher-servlet.xml" />
-	<import resource="spring-security2.xml" />
+	<import resource="spring-security.xml" />
 </beans>

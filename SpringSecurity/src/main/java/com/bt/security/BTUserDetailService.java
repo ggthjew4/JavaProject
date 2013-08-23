@@ -15,11 +15,14 @@ import com.bt.services.ILoginBO;
 import com.bt.vo.User;
 
 public class BTUserDetailService implements UserDetailsService {
-	@Autowired(required = false)
+	@Autowired
 	ILoginBO	loginBO;
 
 	public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException, DataAccessException {
 		final List<User> users = loginBO.getUserInfo(username);
+		if(users.isEmpty()){
+			return new BTUserDetails();
+		}
 		return new BTUserDetails(users.get(0).getUsername(), users.get(0).getPassword(),this.obtainGrantedAuthorityList(users));
 	}
 
