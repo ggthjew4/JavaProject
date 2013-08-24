@@ -11,13 +11,16 @@
 		<intercept-url pattern="/expire" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/accessDenied" access="IS_AUTHENTICATED_ANONYMOUSLY" />
 		<intercept-url pattern="/welcome" access="IS_AUTHENTICATED_FULLY" />
-		<intercept-url pattern="/logout"  filters="none" />
+		<intercept-url pattern="/logout" filters="none" />
 		<intercept-url pattern="/css/**" filters="none" />
 		<intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER" />
 		<custom-filter position="PRE_AUTH_FILTER" ref="siteminderFilter" />
 		<custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
-		<custom-filter ref="loginFilter" before="FORM_LOGIN_FILTER"/>
+		<custom-filter ref="loginFilter" before="FORM_LOGIN_FILTER" />
 		<logout logout-success-url="/logout" />
+		<form-login always-use-default-target="true"
+			authentication-failure-url="/login"
+			authentication-success-handler-ref="authenticationSuccessHandler" />
 	</http>
 
 	<beans:bean id="concurrencyFilter"
@@ -27,10 +30,8 @@
 	</beans:bean>
 
 	<beans:bean id="loginFilter"
-		class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+		class="com.bt.filter.BtUsernamePasswordAuthenticationFilter">
 		<beans:property name="authenticationManager" ref="authenticationManager" />
-		<beans:property name="authenticationSuccessHandler"
-			ref="authenticationSuccessHandler" />
 		<beans:property name="authenticationFailureHandler"
 			ref="authenticationFailureHandler" />
 		<beans:property name="filterProcessesUrl" value="/j_spring_security_check" />
@@ -73,18 +74,19 @@
 			</beans:bean>
 		</beans:property>
 	</beans:bean>
-	
+
 	<beans:bean id="usernamePasswordProvider"
 		class="com.bt.security.provider.BTCustomerAuthenticationProvider">
-		<beans:property name="userDetailsService" ref="userDetailsService"/>
-		<beans:property name="passwordEncoder" ref="md5PasswordEncoder"/>
+		<beans:property name="userDetailsService" ref="userDetailsService" />
+		<beans:property name="passwordEncoder" ref="md5PasswordEncoder" />
 	</beans:bean>
-	
-	<beans:bean id="md5PasswordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
+
+	<beans:bean id="md5PasswordEncoder"
+		class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
 
 	<authentication-manager alias="authenticationManager">
-		<authentication-provider ref="preauthAuthProvider"/>
-		<authentication-provider ref="usernamePasswordProvider"/>
+		<authentication-provider ref="preauthAuthProvider" />
+		<authentication-provider ref="usernamePasswordProvider" />
 	</authentication-manager>
 
 	<beans:bean id="userDetailsService" class="com.bt.security.BTUserDetailService" />
