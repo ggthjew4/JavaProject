@@ -5,6 +5,64 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-3.0.3.xsd">
 
+    <!--
+    
+               說明:
+         <http> 設定區塊主要是要設定filter 及 因為需求需要被springSecurity 監控的地方，
+                       並且可以設定filter chain 相關順序以及登入及登出預設url，可利用spring bean 特性
+                       針對因需求而客製化的filter。
+                       
+               設定說明:
+         1.auto-config="true" spring 會依照預設的filter chain 進行注入動作 ，當然也可以使用自訂filter進行
+          1.1 文件說明:
+            Automatically registers a login form, BASIC authentication, anonymous authentication, logout services, 
+			remember-me and servlet-api-integration. If set to "true", all of these capabilities are added (although 
+			you can still customize the configuration of each by providing the respective element). If unspecified, 
+			defaults to "false".
+		  1.2 filter chain 文件說明:
+		     http://static.springsource.org/spring-security/site/docs/3.0.x/reference/ns-config.html - 2.3.5 Adding in Your Own Filters
+         
+         2.entry-point-ref 登入進入點 此設定如果沒設定，則<form-login login-page=""/> 必須要設定，兩者擇一。
+         
+         3.intercept-url 針對所有request filter 需要做權限控管部分作客製化設定，此部分我不直接導向頁面，因為如果直接導向頁面，
+                             則必須將相關頁面至於可由外部url直接讀取位置，有安全性顧慮，因此統一至於WEB-INF目錄下，並使用spring controller 進行forward。
+         
+         4.access-denied-page 當使用者登入後，如權限不足以瀏覽所設定的位址，則導向設定頁面，如沒設定，則拋出403錯誤代碼。
+          4.1 IS_AUTHENTICATED_ANONYMOUSLY  如果使用者沒有經過正式權限授予則會透過AnonymousAuthenticationFilter自動給予一個ANONYMOUSLY權限。
+            signifies that anyone can access this URL. By default the AnonymousAuthenticationFilter ensures an 'anonymous' Authentication with no roles so that every user has an authentication. The token accepts any authentication, even anonymous.
+          4.2 IS_AUTHENTICATED_FULLY 使用者具備權限即可
+            requires the user to be fully authenticated with an explicit login.
+         
+         5.custom-filter  position="PRE_AUTH_FILTER" 依照 http://static.springsource.org/spring-security/site/docs/3.0.x/reference/ns-config.html
+                             中說明PRE_AUTH_FILTER 為一種透過內部系統進行驗證後並且透過request data such as headers，進行登入動作，而ref對象為繼承AbstractPreAuthenticatedProcessingFilter
+                             子類別。
+           5.1 文件說明:
+           The purpose is then only to extract the necessary information on the principal from the incoming request, 
+           rather than to authenticate them. External authentication systems may provide this information via request data such as headers or cookies which the pre-authentication system can extract. 
+           It is assumed that the external system is responsible for the accuracy of the data and preventing the submission of forged values
+                            上述已經說明此filter主要是用來取得必要資訊，而並非是要驗證資訊，此filter獲得資訊是假定內部系統所傳送的資訊是有防止變造能力的系統，也就是在信任狀況下進行後續動作
+           By default, the filter chain will proceed when an authentication attempt fails in order to allow other authentication mechanisms to process the request. To reject the credentials immediately, 
+           set the continueFilterChainOnUnsuccessfulAuthentication flag to false. The exception raised by the AuthenticationManager will the be re-thrown
+                             預設中如沒得到相關資訊程序會進行下去並透過類似的機制進行後續驗證處理，但如果系統中透過內部登入機制不允許繼續進行流程，則需要將 continueFilterChainOnUnsuccessfulAuthentication設定為false。
+         
+         6.form-login 此設定為自動會讓UsernamePasswordAuthenticationFilter加入filter chain，但是  <custom-filter position="FORM_LOGIN_FILTER" ref="loginFilter" /> 就無法使用
+                             因為form-login已經率先占用此位置，所以如果有需要客製化 UsernamePasswordAuthenticationFilter 並且取代原本位置 並且  auto-config="false" 
+           6.1 文件說明:
+           Note that you can still use auto-config. The form-login element just overrides the default settings. Also note that we've added an extra intercept-url element to say that any requests for the login page should be available to anonymous users [5]. 
+           Otherwise the request would be matched by the pattern /** and it wouldn't be possible to access the login page itself! This is a common configuration error and will result in an infinite loop in the application. Spring Security will emit a warning in the log if your login page appears to be secured. 
+           It is also possible to have all requests matching a particular pattern bypass the security filter chain completely:
+                             這段有提到一個比較有趣的狀況，就是例如很多時候很多人設定了<form-login login-page='/login'/> 但是卻沒有設定<intercept-url pattern="/login*" filters="none"/>
+                             這是一個很常見的錯誤，會造成無窮迴圈。因為當filter發現使用者未登入的時候會想要把使用者導向login.jsp，但是由於沒設定所以會導致存取login.jsp又被導向login.jsp這樣無窮迴圈
+         
+         7.補充，auto-config設定為true，則會加入 BASIC authentication, anonymous authentication, logout services, remember-me and servlet-api-integration 四種
+                             所以如果並非上述四種filter，則加入其他自訂filter則無須理會auto-config設定為true造成衝突的狀況
+           7.1 文件說明:
+           Automatically registers a login form, BASIC authentication, anonymous authentication, logout services, 
+		   remember-me and servlet-api-integration. If set to "true", all of these capabilities are added (although 
+		   you can still customize the configuration of each by providing the respective element). If unspecified, 
+		   defaults to "false".
+                                     
+      -->
 	<http auto-config="true" entry-point-ref="loginUrlEntryPoint"
 		access-denied-page="/accessDenied">
 		<intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
@@ -16,9 +74,9 @@
 		<intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER" />
 		<custom-filter position="PRE_AUTH_FILTER" ref="siteminderFilter" />
 		<custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
-		<custom-filter ref="loginFilter" before="FORM_LOGIN_FILTER" />
+		<custom-filter position="FORM_LOGIN_FILTER" ref="loginFilter" />
 		<logout logout-success-url="/logout" />
-		<form-login always-use-default-target="true"
+		<form-login 
 			authentication-failure-url="/login"
 			authentication-success-handler-ref="authenticationSuccessHandler" />
 	</http>

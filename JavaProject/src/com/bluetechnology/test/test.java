@@ -24,7 +24,7 @@ public class Test implements Serializable{
 		this.videoDate = videoDate;
 	}
 	
-	class Person{
+	class Person extends Test {
 		
 		private String name;
 
@@ -38,6 +38,17 @@ public class Test implements Serializable{
 		
 		
 	}
+	
+	public void print(){
+		Person p = new Person();
+		Test t =  new Test();
+		System.out.println(p.getClass().isAssignableFrom(t.getClass()));
+		System.out.println(t.getClass().isAssignableFrom(p.getClass()));
+		System.out.println(p.getClass().isAssignableFrom(p.getClass()));
+		System.out.println(t.getClass().isInstance(p));
+		System.out.println(new Person() instanceof Test);
+		
+	}
 
 
 	
@@ -46,21 +57,7 @@ public class Test implements Serializable{
 	 */
 	public static void main(String[] args) {
 		
-		Test person1 = new Test("gggg");
-		Test person2 = new Test("kkkk");
-		Test person3 = new Test("uuuu");
-		List<Test> list = new ArrayList<Test>();
-		list.add(person1);
-		list.add(person2);
-		list.add(person3);
-		list.set(0,person3);
-		int index = list.indexOf(person3);
-		System.out.println(index);
-		for(Test vo: list){
-			System.out.println(vo.hashCode());
-			System.out.println(vo.getVideoDate());	
-		}
-		
+		new Test().print();
 		
 	}
 
