@@ -19,6 +19,7 @@ public class BtUsernamePasswordAuthenticationFilter extends UsernamePasswordAuth
 	ILoginBO		loginBO;
 	private String	principalRequestHeader	= "SM_USER";
 
+	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
 		final HttpServletRequest request = (HttpServletRequest) req;
 		String sUserId = request.getHeader(principalRequestHeader);

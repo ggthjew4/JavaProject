@@ -71,22 +71,35 @@
 		<intercept-url pattern="/welcome" access="IS_AUTHENTICATED_FULLY" />
 		<intercept-url pattern="/logout" filters="none" />
 		<intercept-url pattern="/css/**" filters="none" />
-		<intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER" />
+		<intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER,ROLE_CUS_USER" />
 		<custom-filter position="PRE_AUTH_FILTER" ref="siteminderFilter" />
 		<custom-filter position="CONCURRENT_SESSION_FILTER" ref="concurrencyFilter" />
-		<custom-filter position="FORM_LOGIN_FILTER" ref="loginFilter" />
+		<custom-filter before="FORM_LOGIN_FILTER" ref="loginFilter" />
 		<logout logout-success-url="/logout" />
 		<form-login 
 			authentication-failure-url="/login"
 			authentication-success-handler-ref="authenticationSuccessHandler" />
+		<session-management session-authentication-strategy-ref="sas" invalid-session-url="/invalid"/>
 	</http>
 
+     <!-- 
+        1.說明:此filter主要是用來處理兩種情況
+         1.1 透過sessionRegistry取得session 相關資訊，如判斷過期則進行過期導頁程序
+         1.2 透過sessionRegistry取得相關session資訊，如沒過期，則重新更新到期日期資訊。
+        2.sessionRegistry 通常預設都是使用SessionRegistryImpl進行
+     -->
 	<beans:bean id="concurrencyFilter"
 		class="org.springframework.security.web.session.ConcurrentSessionFilter">
 		<beans:property name="sessionRegistry" ref="sessionRegistry" />
 		<beans:property name="expiredUrl" value="/expire" />
 	</beans:bean>
-
+     <!-- 
+        1.說明:此filter是Override UsernamePasswordAuthenticationFilter
+         1.1 UsernamePasswordAuthenticationFilter
+         1.2 透過sessionRegistry取得相關session資訊，如沒過期，則重新更新到期日期資訊。
+        2.authenticationManager 驗證使用者資料的主要驗證程式 。
+        3.filterProcessesUrl 設定驗證參數 ，主要用來判斷request URL 中是否還含有j_spring_security_check，用來辨別request 為驗證要求。
+     -->
 	<beans:bean id="loginFilter"
 		class="com.bt.filter.BtUsernamePasswordAuthenticationFilter">
 		<beans:property name="authenticationManager" ref="authenticationManager" />
@@ -95,6 +108,9 @@
 		<beans:property name="filterProcessesUrl" value="/j_spring_security_check" />
 	</beans:bean>
 
+    <!-- 1.說明 : UsernamePasswordAuthenticationFilter 驗證成功後，透過此handler進行後續session資料儲存及導頁
+          1.1:defaultTargetUrl 和<http> 中的 <form-login> login-processing-url 效果相同，兩者可以擇一 
+    -->
 	<beans:bean id="authenticationSuccessHandler"
 		class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
 		<beans:property name="defaultTargetUrl" value="/welcome" />
@@ -107,6 +123,16 @@
 
 	<beans:bean id="sessionRegistry"
 		class="org.springframework.security.core.session.SessionRegistryImpl" />
+		
+	<!-- 
+	   1.說明:主要是要判斷是否每一個user登入的session數量超過所設定的上限，預設值為1
+	    1.1 文件說明:Strategy which handles concurrent session-control, in addition to the functionality provided by the base class. When invoked following an authentication, it will check whether the user in question should be allowed to proceed,
+	        by comparing the number of sessions they already have active with the configured maximumSessions value. The SessionRegistry is used as the source of data on authenticated users and session data.
+            If a user has reached the maximum number of permitted sessions, the behaviour depends on the exceptionIfMaxExceeded property. The default behaviour is to expired the least recently used session, 
+            which will be invalidated by the ConcurrentSessionFilter if accessed again. If exceptionIfMaxExceeded is set to true, however, the user will be prevented from starting a new authenticated session.
+	                    如已經有使用者超過登入上限數量，則會將前一個用戶的session expire。如exceptionIfMaxExceeded = true，則不會踢掉前一個user session，而會透過SessionManagementFilter
+	                    進行導頁而無法登入
+	 -->	
 	<beans:bean id="sas"
 		class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
 		<beans:constructor-arg name="sessionRegistry"
@@ -115,14 +141,28 @@
 			value="true" />
 		<beans:property name="maximumSessions" value="1" />
 	</beans:bean>
-
+    <!--  
+        1.說明:SSO登入主要filter，透過header資訊進行登入
+          1.1.文件說明:As with most pre-authenticated scenarios, it is essential that the external authentication system is set up correctly as this filter does no authentication whatsoever. 
+              All the protection is assumed to be provided externally and if this filter is included inappropriately in a configuration, it would be possible to assume the identity of a user merely by setting the correct header name.
+              This also means it should not generally be used in combination with other Spring Security authentication mechanisms such as form login, as this would imply there was a means of bypassing the external system which would be risky.
+                        文件中闡述了幾個要點，就是使用此filter是假定是使用內部系統進行保護並且額外透過CA Siteminder來進行header 資料的給予，如設定檔中有不恰當的設定，有可能會導致
+         header資訊被任意竄改，造成安全性問題，同時官方也建議如已經使用此filter進行登入，則不要混用其他登入機制，例如login form，以確保安全。
+        2.參數說明:
+          principalRequestHeader:設定header標頭名稱，SM_USER為預設值
+          exceptionIfHeaderMissing:如沒傳入principalRequestHeader值則拋出例外
+          authenticationManager:提供給RequestHeaderAuthenticationFilter獲得使用者資料用
+    -->
 	<beans:bean id="siteminderFilter"
 		class="org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter">
 		<beans:property name="principalRequestHeader" value="SM_USER" />
 		<beans:property name="exceptionIfHeaderMissing" value="false" />
 		<beans:property name="authenticationManager" ref="authenticationManager" />
 	</beans:bean>
-
+   <!-- 
+                    說明:RequestHeaderAuthenticationFilter 透過 PreAuthenticatedAuthenticationProvider 取得授權資料
+        preAuthenticatedUserDetailsService:用來取得授權資料
+    -->
 	<beans:bean id="preauthAuthProvider"
 		class="org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider">
 		<beans:property name="preAuthenticatedUserDetailsService">

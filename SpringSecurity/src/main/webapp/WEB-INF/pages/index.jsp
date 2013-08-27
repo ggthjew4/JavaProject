@@ -53,8 +53,12 @@
                <p><a>帳戶管理</a></a></p>
             </div>
            </sec:authorize>
+          <sec:authorize ifAnyGranted="ROLE_CUS_USER">
+            <div class="span4">
+               <p><a>自訂功能</a></a></p>
+            </div>
+          </sec:authorize>
          </div>
-
       </div>
    </body>
 </html>
