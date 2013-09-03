@@ -1,0 +1,117 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch
+	http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+	http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+
+	<batch:job id="btMemberBackupJob">
+		<batch:listeners>
+			<batch:listener ref="employeeJobListener"/>
+		</batch:listeners>
+		<batch:step id="employee_step2" parent="employee_step1" next="btMemberBackupSplit" />
+		<batch:split id="btMemberBackupSplit" task-executor="taskExecutor">
+			<batch:flow>
+				<batch:step id="btMemberBackupTask1">
+					<batch:tasklet>
+						<batch:chunk reader="employeeTxtFileItemReader1"
+							writer="employeeItemBackupWriter" commit-interval="${jdbc.tet.commit_interval}" />
+					</batch:tasklet>
+				</batch:step>
+			</batch:flow>
+			<batch:flow>
+				<batch:step id="btMemberBackupTask2">
+					<batch:tasklet>
+						<batch:chunk reader="employeeTxtFileItemReader2"
+							writer="employeeItemBackupWriter" commit-interval="${jdbc.tet.commit_interval}" />
+					</batch:tasklet>
+				</batch:step>
+			</batch:flow>
+			<batch:flow>
+				<batch:step id="btMemberBackupTask3">
+					<batch:tasklet>
+						<batch:chunk reader="employeeTxtFileItemReader3"
+							writer="employeeItemBackupWriter" commit-interval="${jdbc.tet.commit_interval}" />
+					</batch:tasklet>
+				</batch:step>
+			</batch:flow>
+			<batch:flow>
+				<batch:step id="btMemberBackupTask4">
+					<batch:tasklet>
+						<batch:chunk reader="employeeTxtFileItemReader4"
+							writer="employeeItemBackupWriter" commit-interval="${jdbc.tet.commit_interval}" />
+					</batch:tasklet>
+				</batch:step>
+			</batch:flow>
+			<batch:flow>
+				<batch:step id="btMemberBackupTask5">
+					<batch:tasklet>
+						<batch:chunk reader="employeeTxtFileItemReader5"
+							writer="employeeItemBackupWriter" commit-interval="${jdbc.tet.commit_interval}" />
+					</batch:tasklet>
+				</batch:step>
+			</batch:flow>
+		</batch:split>
+	</batch:job>
+
+	<bean id="employeeItemBackupWriter" parent="employeeItemWriter">
+		<property name="sql">
+			<value>
+            <![CDATA[        
+            	insert into bt_employee_backup(dep_id,mem_id,eng_name,chi_name,email_addr,msn_addr) 
+			values (:dep_id, :mem_id, :eng_name, :chi_name,:email_addr,:msn_addr)
+            ]]>
+			</value>
+		</property>
+	</bean>
+
+	<bean id="commonBackupMemberReader"
+		class="org.springframework.batch.item.database.JdbcCursorItemReader"
+		abstract="true">
+		<property name="dataSource" ref="dataSource" />
+		<property name="rowMapper">
+			<bean class="org.springframework.jdbc.core.ColumnMapRowMapper" />
+		</property>
+	</bean>
+
+	<bean id="employeeTxtFileItemReader1" parent="commonBackupMemberReader">
+		<property name="sql">
+			<value><![CDATA[ select * from bt_employee as bt where bt.mem_id BETWEEN '00001' and '00012']]></value>
+		</property>
+	</bean>
+
+	<bean id="employeeTxtFileItemReader2" parent="commonBackupMemberReader">
+		<property name="sql">
+			<value><![CDATA[ select * from bt_employee as bt where bt.mem_id BETWEEN '00013' and '00025' ]]></value>
+		</property>
+	</bean>
+
+	<bean id="employeeTxtFileItemReader3" parent="commonBackupMemberReader">
+		<property name="sql">
+			<value><![CDATA[ select * from bt_employee as bt where bt.mem_id BETWEEN '00026' and '00038' ]]></value>
+		</property>
+	</bean>
+
+	<bean id="employeeTxtFileItemReader4" parent="commonBackupMemberReader">
+		<property name="sql">
+			<value><![CDATA[ select * from bt_employee as bt where bt.mem_id BETWEEN '00039' and '00051' ]]></value>
+		</property>
+	</bean>
+
+	<bean id="employeeTxtFileItemReader5" parent="commonBackupMemberReader">
+		<property name="sql">
+			<value><![CDATA[ select * from bt_employee as bt where bt.mem_id BETWEEN '00052' and '00063' ]]></value>
+		</property>
+	</bean>
+
+
+	<bean id="taskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		<property name="corePoolSize" value="3" />
+		<property name="maxPoolSize" value="3" />
+	</bean>
+
+</beans>

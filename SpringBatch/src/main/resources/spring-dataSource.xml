@@ -24,5 +24,6 @@
   <jdbc:initialize-database data-source="dataSource">
 	<jdbc:script location="org/springframework/batch/core/schema-drop-mysql.sql" />
 	<jdbc:script location="org/springframework/batch/core/schema-mysql.sql" />
+	<jdbc:script location="classpath:BT_CleanTable.sql" />
   </jdbc:initialize-database>
 </beans>
