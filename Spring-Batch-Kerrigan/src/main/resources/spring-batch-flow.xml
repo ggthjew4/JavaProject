@@ -12,7 +12,8 @@
 		<batch:listeners>
 			<batch:listener ref="employeeJobListener"/>
 		</batch:listeners>
-		<batch:step id="employee_step2" parent="employee_step1" next="btMemberBackupSplit" />
+		<batch:step id="employee_step2" parent="employee_step1" next="department_step2" />
+		<batch:step id="department_step2" parent="department_step1" next="btMemberBackupSplit" />
 		<batch:split id="btMemberBackupSplit" task-executor="taskExecutor">
 			<batch:flow>
 				<batch:step id="btMemberBackupTask1">
@@ -68,7 +69,7 @@
 		</property>
 	</bean>
 
-	<bean id="commonBackupMemberReader"
+	<bean id="commonMemberBackupReader"
 		class="org.springframework.batch.item.database.JdbcCursorItemReader"
 		abstract="true">
 		<property name="dataSource" ref="dataSource" />
@@ -77,31 +78,31 @@
 		</property>
 	</bean>
 
-	<bean id="employeeTxtFileItemReader1" parent="commonBackupMemberReader">
+	<bean id="employeeTxtFileItemReader1" parent="commonMemberBackupReader">
 		<property name="sql">
 			<value><![CDATA[ select * from bt_employee as bt where bt.mem_id BETWEEN '00001' and '00012']]></value>
 		</property>
 	</bean>
 
-	<bean id="employeeTxtFileItemReader2" parent="commonBackupMemberReader">
+	<bean id="employeeTxtFileItemReader2" parent="commonMemberBackupReader">
 		<property name="sql">
 			<value><![CDATA[ select * from bt_employee as bt where bt.mem_id BETWEEN '00013' and '00025' ]]></value>
 		</property>
 	</bean>
 
-	<bean id="employeeTxtFileItemReader3" parent="commonBackupMemberReader">
+	<bean id="employeeTxtFileItemReader3" parent="commonMemberBackupReader">
 		<property name="sql">
 			<value><![CDATA[ select * from bt_employee as bt where bt.mem_id BETWEEN '00026' and '00038' ]]></value>
 		</property>
 	</bean>
 
-	<bean id="employeeTxtFileItemReader4" parent="commonBackupMemberReader">
+	<bean id="employeeTxtFileItemReader4" parent="commonMemberBackupReader">
 		<property name="sql">
 			<value><![CDATA[ select * from bt_employee as bt where bt.mem_id BETWEEN '00039' and '00051' ]]></value>
 		</property>
 	</bean>
 
-	<bean id="employeeTxtFileItemReader5" parent="commonBackupMemberReader">
+	<bean id="employeeTxtFileItemReader5" parent="commonMemberBackupReader">
 		<property name="sql">
 			<value><![CDATA[ select * from bt_employee as bt where bt.mem_id BETWEEN '00052' and '00063' ]]></value>
 		</property>
