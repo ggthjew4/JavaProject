@@ -12,6 +12,7 @@ import org.springframework.core.io.Resource;
 
 import com.bt.exception.TokenNotMappingException;
 import com.bt.service.IBTJobValidateService;
+import com.bt.utils.MessagesUtils;
 
 public class BTCommonJobListener implements JobExecutionListener {
 	private static final Log		logger	= LogFactory.getLog(BTCommonJobListener.class);
@@ -24,29 +25,25 @@ public class BTCommonJobListener implements JobExecutionListener {
 
 	public void beforeJob(JobExecution jobExecution) {
 		try {
+			logger.error(MessagesUtils.getMessage("springbatch.message.batch.start", jobExecution.getJobInstance().getJobName()));
 			validateService.checkFileTokenStatus(srcFile, tokenFile);
 		}
 		catch (TokenNotMappingException e) {
+			logger.error(e.getMessage(), e);
 			try {
 				jobOperator.stop(jobExecution.getId());
 			}
 			catch (NoSuchJobExecutionException e1) {
+				logger.error(e1.getMessage(), e1);
 			}
 			catch (JobExecutionNotRunningException e1) {
+				logger.error(e1.getMessage(), e1);
 			}
 		}
 	}
 
-	public Resource getSrcFile() {
-		return srcFile;
-	}
-
 	public void setSrcFile(Resource srcFile) {
 		this.srcFile = srcFile;
-	}
-
-	public Resource getTokenFile() {
-		return tokenFile;
 	}
 
 	public void setTokenFile(Resource tokenFile) {
@@ -54,5 +51,6 @@ public class BTCommonJobListener implements JobExecutionListener {
 	}
 
 	public void afterJob(JobExecution jobExecution) {
+		logger.info(MessagesUtils.getMessage("springbatch.message.batch.end", jobExecution.getJobInstance().getJobName()));
 	}
 }

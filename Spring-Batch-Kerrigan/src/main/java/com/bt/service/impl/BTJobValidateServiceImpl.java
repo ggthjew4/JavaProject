@@ -14,10 +14,11 @@ import org.springframework.util.Assert;
 
 import com.bt.exception.TokenNotMappingException;
 import com.bt.service.IBTJobValidateService;
+import com.bt.utils.MessagesUtils;
 
 @Service
 public class BTJobValidateServiceImpl implements IBTJobValidateService {
-	private static final Log		logger	= LogFactory.getLog(BTJobValidateServiceImpl.class);
+	private static final Log	logger					= LogFactory.getLog(BTJobValidateServiceImpl.class);
 	private static final String	DEFAULT_CHARSET_NAME	= "UTF-8";
 	private static final String	DELIMITER_COMMA			= "|";
 	private static final String	TOKEN_KEY				= "999";
@@ -26,13 +27,17 @@ public class BTJobValidateServiceImpl implements IBTJobValidateService {
 		try {
 			BufferedReader srcFileReader = getResourceBufferedReader(srcFile);
 			BufferedReader tokenFileReader = getResourceBufferedReader(tokenFile);
-			if (!checkTokenAvailable(getSrcFileCount(srcFileReader), getTokenCount(tokenFileReader))){
-				throw new TokenNotMappingException();
+			int srcCount = getSrcFileCount(srcFileReader);
+			int tokenCount = getTokenCount(tokenFileReader);
+			if (!checkTokenAvailable(srcCount, tokenCount)) {
+				throw new TokenNotMappingException(MessagesUtils.getMessage("springbatch.message.batch.validate.count.error", String.valueOf(srcCount), String.valueOf(tokenCount)));
 			}
 		}
 		catch (UnsupportedEncodingException e) {
+			logger.error(e.getMessage(), e);
 		}
 		catch (IOException e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 
@@ -43,7 +48,7 @@ public class BTJobValidateServiceImpl implements IBTJobValidateService {
 		while ((br.readLine()) != null) {
 			fileSize++;
 		}
-		logger.debug("getSrcFileCount count :"+fileSize);
+		logger.debug("getSrcFileCount count :" + fileSize);
 		return fileSize;
 	}
 
@@ -62,17 +67,20 @@ public class BTJobValidateServiceImpl implements IBTJobValidateService {
 			}
 		}
 		catch (NumberFormatException e) {
+			logger.error(e.getMessage(), e);
 		}
 		catch (IOException e) {
+			logger.error(e.getMessage(), e);
 		}
 		finally {
 			try {
 				bufferedReader.close();
 			}
 			catch (IOException e) {
+				logger.error(e.getMessage(), e);
 			}
 		}
-		logger.debug("getTokenCount count :"+count);
+		logger.debug("getTokenCount count :" + count);
 		return count;
 	}
 

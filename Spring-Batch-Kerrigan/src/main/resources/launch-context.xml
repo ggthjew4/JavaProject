@@ -11,6 +11,12 @@
 
 	<context:property-placeholder location="classpath:batch.properties" />
 
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basename" value="messages"></property>
+	</bean>
+
+
 	<context:component-scan base-package="com.bt" />
 
 	<bean id="jobLauncher"

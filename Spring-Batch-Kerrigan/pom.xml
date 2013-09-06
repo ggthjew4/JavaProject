@@ -24,8 +24,20 @@
 			<artifactId>spring-web</artifactId>
 			<version>${spring.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
 
-
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
@@ -37,20 +49,20 @@
 			<artifactId>spring-batch-core</artifactId>
 			<version>${spring.batch.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.batch</groupId>
 			<artifactId>spring-batch-infrastructure</artifactId>
 			<version>${spring.batch.version}</version>
 		</dependency>
- 
+
 		<!-- Spring Batch unit test -->
 		<dependency>
 			<groupId>org.springframework.batch</groupId>
 			<artifactId>spring-batch-test</artifactId>
 			<version>${spring.batch.version}</version>
 		</dependency>
-		
+
 
 		<dependency>
 			<groupId>org.apache.commons</groupId>
