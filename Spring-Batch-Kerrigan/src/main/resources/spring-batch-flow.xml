@@ -8,7 +8,7 @@
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 
-	<batch:job id="btMemberBackupJob">
+	<batch:job id="btMemberBackupJob" incrementer="dynamicJobParameters">
 		<batch:listeners>
 			<batch:listener ref="employeeJobListener"/>
 		</batch:listeners>

@@ -6,36 +6,77 @@
 	http://www.springframework.org/schema/beans 
 	http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-
+    
+    <!-- 
+                定義 batch資料轉換時候所需要的VO物件
+     -->
 	<bean id="employee" class="com.bt.vo.BTemployee" scope="prototype" />
 
+    <!-- 
+                定義 batch資料轉換時候所需要的VO物件
+     -->
 	<bean id="department" class="com.bt.vo.BTDepartment" scope="prototype" />
 	
-	<bean id="commonJobListener" class="com.bt.listeners.job.BTCommonJobListener"/> 
-
-	<bean id="employeeJobListener" parent="commonJobListener">
-	  <property name="srcFile" value="file:${batch.input.file.employee.path}"/>
-	  <property name="tokenFile" value="file:${batch.input.file.employee.tokenFile}"/>
-	</bean>
-	
-	<bean id="departmentJobListener" parent="commonJobListener">
-	  <property name="srcFile" value="file:${batch.input.file.department.path}"/>
-	  <property name="tokenFile" value="file:${batch.input.file.department.tokenFile}"/>
-	</bean>
-
-
+	<!-- 
+	 1.說明:
+	    job主程式，主要執行BT員工資料讀出與寫入。
+	 2.設定說明:
+	    2.1.incrementer:
+	                 提供一個job instance 在開始一個程序時候給予parameters
+	    2.2.batch:listeners:
+	                提供job在執行前，執行後可以針對job執行狀況進行監聽的動作，從字面可以得知可以同時註冊多個listener
+	                如要監聽job執行情形則必須產生一個class並且實作JobExecutionListener才進行。並將listener放置於job設定檔中的bean區塊
+	                如要監聽step則必須將class實作StepExecutionListener，並且放置於step區塊
+        2.3.batch:step:
+          spring batch文件中提到 ，"step" 定義上是一種包含一些相依元素的定義每一個job的階段性要做的事情或是流程控制，定義很廣
+                          可以很簡單，也可以很複雜
+          As discussed in Batch Domain Language, a Step is a domain object that encapsulates an independent, sequential phase of a batch job 
+          and contains all of the information necessary to define and control the actual batch processing. This is a necessarily vague description 
+          because the contents of any given Step are at the discretion of the developer writing a Job. A Step can be as simple or complex as the developer desires.
+          A simple Step might load data from a file into the database, requiring little or no code. (depending upon the implementations used) A more complex Step may have complicated business rules that are applied as part of the processing.
+	    2.4.batch:chunk:
+	               定義基本的read write 並且可透過commit-interval設定讀取N筆及執行commit
+	               文件有特別描述在ItemReader產生同時也建立了chunk並且先將資料放入ItemProcessor，到達預定commit比數後，在交給ItemWriter進行commit
+	      Spring Batch uses a 'Chunk Oriented' processing style within its most common implementation. Chunk oriented processing refers to reading the data one at a time,
+	      and creating 'chunks' that will be written out, within a transaction boundary. One item is read in from an ItemReader, 
+	      handed to an ItemProcessor, and aggregated. Once the number of items read equals the commit interval, 
+	      the entire chunk is written out via the ItemWriter, and then the transaction is committed.      
+	                此動作也如下列程式碼:
+	       List items = new Arraylist();
+			for(int i = 0; i < commitInterval; i++){
+			    Object item = itemReader.read()
+			    Object processedItem = itemProcessor.process(item);
+			    items.add(processedItem);
+			}
+			itemWriter.write(items);
+	    2.5.batch:chunk reader 用來讀取資料並且封裝資料的程式
+	      
+	 -->
 	<batch:job id="btEmployeeJob" incrementer="dynamicJobParameters">
 		<batch:listeners>
 			<batch:listener ref="employeeJobListener"></batch:listener>
 		</batch:listeners>
 		<batch:step id="employee_step1">
 			<batch:tasklet>
-				<batch:chunk reader="employeeTxtFileItemReader" writer="employeeItemWriter"
+				<batch:chunk reader="employeeTxtFileItemReader"  writer="employeeItemWriter"
 					commit-interval="${jdbc.tet.commit_interval}">
 				</batch:chunk>
 			</batch:tasklet>
 		</batch:step>
 	</batch:job>
+
+	<bean id="commonJobListener" class="com.bt.listeners.job.BTCommonJobListener" />
+
+	<bean id="employeeJobListener" parent="commonJobListener">
+		<property name="srcFile" value="file:${batch.input.file.employee.path}" />
+		<property name="tokenFile" value="file:${batch.input.file.employee.tokenFile}" />
+	</bean>
+
+	<bean id="departmentJobListener" parent="commonJobListener">
+		<property name="srcFile" value="file:${batch.input.file.department.path}" />
+		<property name="tokenFile"
+			value="file:${batch.input.file.department.tokenFile}" />
+	</bean>
 
 	<batch:job id="btDepartmentJob" incrementer="dynamicJobParameters">
 		<batch:listeners>

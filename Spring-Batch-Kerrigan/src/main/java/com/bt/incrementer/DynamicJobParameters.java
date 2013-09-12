@@ -3,7 +3,8 @@ package com.bt.incrementer;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.JobParametersIncrementer;
-
+import org.springframework.stereotype.Component;
+@Component
 public class DynamicJobParameters implements JobParametersIncrementer {
 	public JobParameters getNext(JobParameters parameters) {
         if (parameters==null || parameters.isEmpty()) {
