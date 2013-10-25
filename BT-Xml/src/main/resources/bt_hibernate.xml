@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bluetechnology-mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="BTHibetnateXMLSchema.xsd">
+	<class name="com.bt.vo.BtUser" table="btuser">
+		<id name="userSn" type="Integer" column="user_sn"/>
+		<property name="userId" type="String" column="user_id"/>
+		<property name="userName" type="String" column="user_name"/>
+		<property name="userPwd" type="String" column="user_pwd"/>
+		<property name="userAge" type="Integer" column="user_age"/>
+		<property name="userVer" type="Integer" column="user_ver"/>
+	</class>
+</bluetechnology-mapping>
