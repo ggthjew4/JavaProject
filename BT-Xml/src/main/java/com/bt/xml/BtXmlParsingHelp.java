@@ -10,7 +10,6 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import com.bt.xml.jaxb.BluetechnologyMapping;
 
 public class BtXmlParsingHelp {
-	// private static ApplicationContext springContext = new ClassPathXmlApplicationContext("Spring-Configuration.xml");
 	private static Jaxb2Marshaller			marshaller;
 	private static Jaxb2Marshaller			unmarshaller;
 	private static BluetechnologyMapping	object;

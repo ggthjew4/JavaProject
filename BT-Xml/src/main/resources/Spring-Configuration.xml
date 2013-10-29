@@ -8,6 +8,8 @@
 		<property name="marshaller" ref="jaxb2Marshaller" />
 		<property name="unmarshaller" ref="jaxb2Marshaller" />
 	</bean>
+	
+	<bean id="btMainPlaform" class="com.bt.BtMainPlaform"/>
 
 	<bean id="jaxb2Marshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
 		<property name="classesToBeBound">
