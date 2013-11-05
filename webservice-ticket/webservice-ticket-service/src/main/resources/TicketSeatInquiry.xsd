@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.bluetechnology.com.tw"
+	xmlns:ticket="http://www.bluetechnology.com.tw" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<!-- web service input types -->
+
+	<xsd:element name="ticketSeatInquiryResultRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="airPlaneInterval " type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="airPlaneFrom" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="airPlaneDestination" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="airPlaneClass" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- web service output types -->
+
+	<xsd:element name="ticketSeatInquiryResult">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="airPlaneNo" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="seatCode" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="seatNo" type="xsd:string" minOccurs="1"
+					maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="ticketSeatInquiryResultResponse">
+		<xsd:annotation>
+			<xsd:documentation>剩餘機位查詢</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="ticket:ticketSeatInquiryResult"
+				minOccurs="1" maxOccurs="unbounded"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="ticketSeatInquiryResultResponse" type="ticket:ticketSeatInquiryResultResponse">
+		<xsd:annotation>
+			<xsd:documentation>剩餘機位查詢output</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+</xsd:schema>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://com.joemo.schema.tradeservice"
+	xmlns="http://com.joemo.schema.tradeservice" xmlns:tr="http://com.joemo.schema.trade"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://com.joemo.schema.tradeservice">
+			<xsd:import namespace="http://com.joemo.schema.trade" schemaLocation="trade.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="tradeInput">
+		<wsdl:part name="trade" element="tr:trade" />
+	</wsdl:message>
+
+	<wsdl:message name="tradeOutput">
+		<wsdl:part name="status" element="tr:status" />
+	</wsdl:message>
+
+	<wsdl:portType name="TradeService">
+		<wsdl:operation name="book">
+			<wsdl:input message="tradeInput" /> <!-- 這是有定義的xml -->
+			<wsdl:output message="tradeOutput" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="TradeServiceHTTPBinding" type="TradeService">
+		<wsdlsoap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="book">
+			<wsdlsoap:operation soapAction="" />
+			<wsdl:input>
+				<wsdlsoap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<wsdlsoap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	
+	<!-- 
+	
+		<wsdl:binding name="CDRPortTypeHttpBinding" type="bpmesb:CDRPortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="queryCdr">
+			<soap:operation soapAction="http://www.taiwanMobile.com/CDR/wsdl/CDR/v1-0/queryCdr" style="document" />
+			<wsdl:input>
+				<soap:body use="literal" parts="body" />
+				<soap:header use="literal" message="bpmesb:queryCdrRequest" part="header" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="body" />
+				<soap:header use="literal" message="bpmesb:queryCdrResponse" part="header" />
+			</wsdl:output>
+		</wsdl:operation>
+		<wsdl:operation name="notifyCdrResult">
+			<soap:operation soapAction="http://www.taiwanMobile.com/CDR/wsdl/CDR/v1-0/notifyCdrResult" style="document"/>
+			<wsdl:input>
+				<soap:body use="literal" parts="body" /> 這個指向message body <wsdl:part name="body" element="tr:trade" />
+				<soap:header use="literal" message="bpmesb:notifyCdrResultRequest" part="header" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" parts="body" />
+				<soap:header use="literal" message="bpmesb:notifyCdrResultResponse" part="header" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	
+	
+	 -->
+
+   <!-- 從這裡為起點 -->
+	<wsdl:service name="TradeServicePorts">
+		<wsdl:port binding="TradeServiceHTTPBinding" name="TradeService"> <!-- 找28行的binding -->
+			<wsdlsoap:address location="http://localhost:8089/tradeService/TradeServicePorts" /><!-- 這是要呼叫的網址 -->
+		</wsdl:port>
+	</wsdl:service>
+
+</wsdl:definitions>

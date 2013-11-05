@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"
+	default-dependency-check="none" default-lazy-init="false">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath*:META-INF/cxf/cxf-extension-*.xml" />
+	<!-- Hook up the web service -->
+	<bean id="myservice" class="com.bluetechnology.impl.TicketSeatInquiryImpl" />
+	<bean id="servciePasswordCallback" class="com.bluetechnology.security.ServicePasswordCallback" />
+	<jaxws:endpoint id="ws-example" implementor="#myservice"
+		implementorClass="com.bluetechnology.impl.TicketSeatInquiryImpl"
+		xmlns:ns1="http://www.bluetechnology.com.tw/wsdl/v1-0" serviceName="ns1:TicketSeatInquiryHttpService"
+		address="/ws-example" wsdlLocation="TicketSeatInquiry.wsdl">
+		<jaxws:inInterceptors>
+			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="passwordType" value="PasswordDigest" />
+						<entry key="passwordCallbackRef">
+							<ref bean="servciePasswordCallback" />
+						</entry>
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:inInterceptors>
+	</jaxws:endpoint>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/practice" />
+		<property name="username" value="rock" />
+		<property name="password" value="rock" />
+	</bean>
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<constructor-arg ref="dataSource" />
+	</bean>
+
+	<context:component-scan base-package="com.bluetechnology" />
+</beans>
