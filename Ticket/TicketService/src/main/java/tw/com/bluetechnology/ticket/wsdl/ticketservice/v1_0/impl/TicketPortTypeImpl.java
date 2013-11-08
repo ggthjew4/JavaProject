@@ -24,13 +24,11 @@ public class TicketPortTypeImpl implements TicketPortType {
 
 	@Override
 	public TicketSeatOrderInquiryResultResponse ticketSeatOrderInquiry(TicketSeatOrderInquiryRequest body) {
-		// TODO Auto-generated method stub
-		return null;
+		return ticketDao.getTicketSeatOrderInquiryResultResponse(body);
 	}
 
 	@Override
 	public TicketSeatOrderResultResponse ticketSeatOrder(TicketSeatOrderResultRequest body) {
-		// TODO Auto-generated method stub
-		return null;
+		return ticketDao.getTicketSeatOrderResultResponse(body);
 	}
 }
