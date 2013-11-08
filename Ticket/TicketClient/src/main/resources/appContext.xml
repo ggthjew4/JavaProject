@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-2.5.xsd
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd"
+	xmlns:ns1="http://www.bluetechnology.com.tw/Ticket/wsdl/TicketService/v1-0"
+	default-dependency-check="none" default-lazy-init="false">
+
+	<context:component-scan base-package="tw.com.bluetechnology.ticket" />
+
+	<jaxws:client id="webServiceTicketClient"
+		serviceClass="tw.com.bluetechnology.ticket.wsdl.ticketservice.v1_0.TicketPortType"
+		address="http://127.0.0.1:8089/TicketService/TicketSoapHttpService?wsdl"
+		endpointName="TicketSoapHttpPort" serviceName="ns1:TicketSoapHttpService"
+		wsdlLocation="Ticket.wsdl">
+		<jaxws:outInterceptors>
+			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
+				<constructor-arg>
+					<map>
+						<entry key="action" value="UsernameToken" />
+						<entry key="user" value="kerrigan" />
+						<entry key="passwordType" value="PasswordDigest" />
+						<entry key="passwordCallbackClass"
+							value="tw.com.bluetechnology.ticket.security.ClientPasswordCallback" />
+					</map>
+				</constructor-arg>
+			</bean>
+		</jaxws:outInterceptors>
+	</jaxws:client>
+</beans>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+	targetNamespace="http://www.bluetechnology.com.tw/Ticket/xsd/TicketService/v1-0"
+	xmlns:ticket="http://www.bluetechnology.com.tw/Ticket/xsd/TicketService/v1-0"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<!-- web service input types -->
+
+	<!-- 共用區塊 -->
+
+	<xsd:element name="customerUsername" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>旅客姓名</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="customerId" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>旅客身分證字號</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:element name="customerSn" type="xsd:integer">
+		<xsd:annotation>
+			<xsd:documentation>旅客訂位代號</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<!-- 共用區塊 -->
+
+	<xsd:element name="ticketSeatInquiryRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="airPlaneInterval" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="airPlaneFrom" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="airPlaneDestination" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="airPlaneClass" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<!-- web service output types -->
+
+	<xsd:element name="ticketSeatInquiryResult">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="airPlaneNo" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="seatCode" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+				<xsd:element name="seatNo" type="xsd:string" minOccurs="1"
+					maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="ticketSeatInquiryResultResponse">
+		<xsd:annotation>
+			<xsd:documentation>剩餘機位查詢request</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="ticket:ticketSeatInquiryResult"
+				minOccurs="1" maxOccurs="unbounded"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="ticketSeatInquiryResultResponse" type="ticket:ticketSeatInquiryResultResponse">
+		<xsd:annotation>
+			<xsd:documentation>剩餘機位查詢output</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<!-- 訂位作業區塊 -->
+	<xsd:element name="ticketSeatOrderRequestResult">
+		<xsd:annotation>
+			<xsd:documentation>機位訂位request</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ticket:customerUsername" minOccurs="1"
+					maxOccurs="1" />
+				<xsd:element ref="ticket:customerId" minOccurs="1"
+					maxOccurs="1" />
+				<xsd:element name="seatCode" type="xsd:string"
+					minOccurs="1" maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="ticketSeatOrderResponseResult">
+		<xsd:annotation>
+			<xsd:documentation>機位訂位response</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ticket:customerSn" minOccurs="1"
+					maxOccurs="1" />
+				<xsd:element ref="ticket:customerUsername" minOccurs="1"
+					maxOccurs="1" />
+				<xsd:element ref="ticket:customerId" minOccurs="1"
+					maxOccurs="1" />
+				<xsd:element name="customerStatus" minOccurs="1"
+					maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="ticketSeatOrderResultRequest">
+		<xsd:annotation>
+			<xsd:documentation>機位訂位request</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="ticket:ticketSeatOrderRequestResult"
+				minOccurs="1" maxOccurs="unbounded"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="ticketSeatOrderResultRequest" type="ticket:ticketSeatOrderResultRequest">
+		<xsd:annotation>
+			<xsd:documentation>機位訂位request</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<xsd:complexType name="ticketSeatOrderResultResponse">
+		<xsd:annotation>
+			<xsd:documentation>機位訂位response</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="ticket:ticketSeatOrderResponseResult"
+				minOccurs="1" maxOccurs="unbounded"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="ticketSeatOrderResultResponse" type="ticket:ticketSeatOrderResultResponse">
+		<xsd:annotation>
+			<xsd:documentation>機位訂位response</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<!-- 訂位作業區塊 -->
+
+
+	<!-- 訂位查詢區塊 -->
+	<xsd:element name="ticketSeatOrderInquiryRequest">
+		<xsd:annotation>
+			<xsd:documentation>訂位查詢request</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="ticket:customerId" minOccurs="1"
+					maxOccurs="1" />
+				<xsd:element ref="ticket:customerSn" minOccurs="1"
+					maxOccurs="1" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:element name="ticketSeatOrderInquiryResponseResult">
+		<xsd:annotation>
+			<xsd:documentation>訂位查詢response</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="airPlaneDepartureTime" minOccurs="1"
+					maxOccurs="1" type="xsd:dateTime" />
+				<xsd:element name="airPlaneArrivalTime" minOccurs="1"
+					maxOccurs="1" type="xsd:dateTime" />
+				<xsd:element name="airPlaneNo" type="xsd:string" />
+				<xsd:element name="cabinClass" type="xsd:string"></xsd:element>
+				<xsd:element name="seatNo" type="xsd:string"></xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+
+	<xsd:complexType name="ticketSeatOrderInquiryResultResponse">
+		<xsd:annotation>
+			<xsd:documentation>訂位查詢response</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="ticket:ticketSeatOrderInquiryResponseResult"
+				minOccurs="1" maxOccurs="unbounded"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:element name="ticketSeatOrderInquiryResultResponse"
+		type="ticket:ticketSeatOrderInquiryResultResponse">
+		<xsd:annotation>
+			<xsd:documentation>訂位查詢response</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+
+	<!-- 訂位查詢區塊 -->
+
+</xsd:schema>

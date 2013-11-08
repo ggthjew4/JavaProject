@@ -1,0 +1,103 @@
+<wsdl:definitions
+	targetNamespace="http://www.bluetechnology.com.tw/Ticket/wsdl/TicketService/v1-0"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:bt="http://www.bluetechnology.com.tw/Ticket/xsd/TicketService/v1-0"
+	xmlns:btwsdl="http://www.bluetechnology.com.tw/Ticket/wsdl/TicketService/v1-0"
+	xmlns:sec="http://cxf.apache.org/configuration/security" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<wsdl:types>
+		<xsd:schema>
+			<xsd:import
+				namespace="http://www.bluetechnology.com.tw/Ticket/xsd/TicketService/v1-0"
+				schemaLocation="Ticket.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<wsdl:message name="ticketSeatInquiryRequest">
+		<wsdl:part name="body" element="bt:ticketSeatInquiryRequest" />
+	</wsdl:message>
+	<wsdl:message name="ticketSeatInquiryResponse">
+		<wsdl:part name="body" element="bt:ticketSeatInquiryResultResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="ticketSeatOrderRequest">
+		<wsdl:part name="body" element="bt:ticketSeatOrderResultRequest" />
+	</wsdl:message>
+	<wsdl:message name="ticketSeatOrderResponse">
+		<wsdl:part name="body" element="bt:ticketSeatOrderResultResponse" />
+	</wsdl:message>
+
+	<wsdl:message name="ticketSeatOrderInquiryRequest">
+		<wsdl:part name="body" element="bt:ticketSeatOrderInquiryRequest" />
+	</wsdl:message>
+	<wsdl:message name="ticketSeatOrderInquiryResponse">
+		<wsdl:part name="body" element="bt:ticketSeatOrderInquiryResultResponse" />
+	</wsdl:message>
+
+
+	<wsdl:portType name="TicketPortType">
+		<wsdl:operation name="ticketSeatInquiry">
+			<wsdl:input message="btwsdl:ticketSeatInquiryRequest" />
+			<wsdl:output message="btwsdl:ticketSeatInquiryResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="ticketSeatOrder">
+			<wsdl:input message="btwsdl:ticketSeatOrderRequest" />
+			<wsdl:output message="btwsdl:ticketSeatOrderResponse" />
+		</wsdl:operation>
+		<wsdl:operation name="ticketSeatOrderInquiry">
+			<wsdl:input message="btwsdl:ticketSeatOrderInquiryRequest" />
+			<wsdl:output message="btwsdl:ticketSeatOrderInquiryResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+
+	<wsdl:binding name="TicketPortTypeHttpBinding" type="btwsdl:TicketPortType">
+		<wsdlsoap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+
+		<wsdl:operation name="ticketSeatInquiry">
+			<wsdlsoap:operation
+				soapAction="http://www.blueTechnology.com.tw/Ticket/wsdl/TicketService/v1-0/ticketSeatInquiry"
+				style="document" />
+			<wsdl:input>
+				<wsdlsoap:body parts="body" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<wsdlsoap:body parts="body" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="ticketSeatOrder">
+			<wsdlsoap:operation
+				soapAction="http://www.blueTechnology.com.tw/Ticket/wsdl/TicketService/v1-0/ticketSeatOrder"
+				style="document" />
+			<wsdl:input>
+				<wsdlsoap:body parts="body" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<wsdlsoap:body parts="body" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="ticketSeatOrderInquiry">
+			<wsdlsoap:operation
+				soapAction="http://www.blueTechnology.com.tw/Ticket/wsdl/TicketService/v1-0/ticketSeatOrderInquiry"
+				style="document" />
+			<wsdl:input>
+				<wsdlsoap:body parts="body" use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<wsdlsoap:body parts="body" use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+
+	<!-- 從這裡為起點 -->
+	<wsdl:service name="TicketSoapHttpService">
+		<wsdl:port binding="btwsdl:TicketPortTypeHttpBinding" name="TicketSoapHttpPort"> <!-- 找28行的binding -->
+			<wsdlsoap:address
+				location="http://127.0.0.1:8089/TicketService/TicketSoapHttpService" /><!-- 
+				這是要呼叫的網址 -->
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

@@ -94,4 +94,12 @@ public class BTJobValidateServiceImpl implements IBTJobValidateService {
 		Assert.notNull(tokenCount, "tokenCount must be require.");
 		return srcCount == tokenCount;
 	}
+	
+	public final static void main(String[] arg){
+		String a = "gg";
+		String b = a;
+		String c= b.substring(0,1);
+		System.out.println(c);
+			
+	}
 }
