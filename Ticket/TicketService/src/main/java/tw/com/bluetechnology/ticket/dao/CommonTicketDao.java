@@ -11,7 +11,17 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+/**
+ * Ticket Dao 共用抽象類別
+ * 
+ * @see JdbcTemplate
+ * @see XMLGregorianCalendar
+ * @author kerrigan
+ */
 public abstract class CommonTicketDao {
+	/**
+	 * Spring {@link JdbcTemplate} 程式，供給Dao子類別存取資料庫用
+	 */
 	private JdbcTemplate	jdbcTemplate;
 
 	@Autowired
@@ -23,6 +33,12 @@ public abstract class CommonTicketDao {
 		return jdbcTemplate;
 	}
 
+	/**
+	 * 轉換{@link Date}物件為{@link XMLGregorianCalendar}
+	 * 
+	 * @param 帶轉換的{@link Date}物件
+	 * @return {@link XMLGregorianCalendar}物件
+	 */
 	protected final XMLGregorianCalendar dateCovertToXMLGregorianCalendar(final Date pDate) {
 		GregorianCalendar gregory = new GregorianCalendar();
 		gregory.setTime(pDate);
@@ -31,7 +47,6 @@ public abstract class CommonTicketDao {
 			calendar = DatatypeFactory.newInstance().newXMLGregorianCalendar(gregory);
 		}
 		catch (DatatypeConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return calendar;

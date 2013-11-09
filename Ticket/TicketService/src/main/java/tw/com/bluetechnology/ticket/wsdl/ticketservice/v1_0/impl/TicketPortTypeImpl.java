@@ -1,7 +1,5 @@
 package tw.com.bluetechnology.ticket.wsdl.ticketservice.v1_0.impl;
 
-import java.math.BigInteger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
