@@ -25,12 +25,20 @@ import tw.com.bluetechnology.ticket.xsd.ticketservice.v1_0.TicketSeatOrderReques
 import tw.com.bluetechnology.ticket.xsd.ticketservice.v1_0.TicketSeatOrderResponseResult;
 import tw.com.bluetechnology.ticket.xsd.ticketservice.v1_0.TicketSeatOrderResultRequest;
 import tw.com.bluetechnology.ticket.xsd.ticketservice.v1_0.TicketSeatOrderResultResponse;
-
+/**
+ * @author kerrigan
+ * Ticket WebService Dao 實作類別
+ */
 @Repository
 public class TicketDaoImpl extends CommonTicketDao implements ITicketDao {
 	
 	private final static SimpleDateFormat	DATE_FORMATTER_PATTERN	= new SimpleDateFormat("yyyyMMddHHmm");
 
+	/**
+	 * 獲得班機剩餘座位資訊
+	 * @param 查詢剩餘座位資訊輸入物件 {@link TicketSeatInquiryRequest}
+	 * @return 查詢剩餘座位資訊回傳物件 {@link TicketSeatInquiryResultResponse}
+	 */
 	@Override
 	public TicketSeatInquiryResultResponse getTicketSeatInquiryResultResponse(final TicketSeatInquiryRequest request) {
 		List<TicketSeatInquiryResult> response = null;
@@ -67,6 +75,11 @@ public class TicketDaoImpl extends CommonTicketDao implements ITicketDao {
 		return ticketSeatInquiryResultResponse;
 	}
 
+	/**
+	 * 獲得班機訂位查詢資訊
+	 * @param 班機訂位查詢資訊輸入物件 {@link TicketSeatOrderInquiryRequest}
+	 * @return 班機訂位查詢資訊回傳物件 {@link TicketSeatOrderInquiryResultResponse}
+	 */
 	@Override
 	public TicketSeatOrderInquiryResultResponse getTicketSeatOrderInquiryResultResponse(final TicketSeatOrderInquiryRequest request) {
 		final String sql = "SELECT airplane.AIR_DEPARTURE_TIME,airplane.AIR_ARRIVAL_TIME,airplane.AIR_NUMBER,class_cabin.CAB_CLASS,seats.SEA_NO"
@@ -74,7 +87,7 @@ public class TicketDaoImpl extends CommonTicketDao implements ITicketDao {
 			             + " INNER JOIN class_cabin ON airplane.AIR_SN = class_cabin.CAB_AIR_SN INNER JOIN seats ON seats.SEA_CAB_SN = class_cabin.CAB_SN INNER JOIN customer on customer.USER_SEA_SN = seats.SEA_SN"
 			             + " WHERE customer.USER_ID = ? and customer.USER_SN = ?";
 		final TicketSeatOrderInquiryResultResponse returnResponse = ObjectFactory.getInstance().createTicketSeatOrderInquiryResultResponse();
-		final List<TicketSeatOrderInquiryResponseResult> result = getJdbcTemplate().query(sql, new Object[]{request.getCustomerId(),request.getCustomerSn()},new RowMapper<TicketSeatOrderInquiryResponseResult>(){
+		returnResponse.getTicketSeatOrderInquiryResponseResult().addAll(getJdbcTemplate().query(sql, new Object[] { request.getCustomerId(), request.getCustomerSn() }, new RowMapper<TicketSeatOrderInquiryResponseResult>() {
 			@Override
 			public TicketSeatOrderInquiryResponseResult mapRow(ResultSet rs, int rowNum) throws SQLException {
 				TicketSeatOrderInquiryResponseResult result = ObjectFactory.getInstance().createTicketSeatOrderInquiryResponseResult();
@@ -84,11 +97,16 @@ public class TicketDaoImpl extends CommonTicketDao implements ITicketDao {
 				result.setCabinClass(rs.getString("CAB_CLASS"));
 				result.setSeatNo(rs.getString("SEA_NO"));
 				return result;
-			}});
-		returnResponse.getTicketSeatOrderInquiryResponseResult().addAll(result);
+			}
+		}));
 		return returnResponse;
 	}
 
+	/**
+	 * 獲得訂位作業資訊
+	 * @param 訂位作業資訊輸入物件 {@link TicketSeatOrderInquiryRequest}
+	 * @return 訂位作業資訊回傳物件 {@link TicketSeatOrderInquiryResultResponse}
+	 */
 	@Override
 	public TicketSeatOrderResultResponse getTicketSeatOrderResultResponse(final TicketSeatOrderResultRequest request) {
 		final String insertSql = "INSERT INTO customer (USER_NAME,USER_SEA_SN,USER_ID,USER_STATUS)"

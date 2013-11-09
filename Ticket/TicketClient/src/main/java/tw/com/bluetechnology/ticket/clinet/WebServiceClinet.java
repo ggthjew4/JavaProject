@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,22 +35,26 @@ public class WebServiceClinet {
 	@Autowired
 	private TicketPortType					service;
 	private final static SimpleDateFormat	DATE_FORMATTER_PATTERN	= new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private final static Logger				logger					= Logger.getLogger(WebServiceClinet.class);
 
 	/**
 	 * 剩餘機位查詢測試
 	 */
-	// @Test
+	@Test
 	public void testTicketSeatInquiry() {
 		final TicketSeatInquiryResultResponse response = service.ticketSeatInquiry(createTicketSeatInquiryRequestforTest());
+		logTestDescription("剩餘機位查詢測試開始");
+		logTestDescription("輸入參數:\r" + "時間區間:2013-11-04 13:00 ~ 2013-11-04 18:00\r起點:TPE\r終點:HWC\r艙等:First");
 		for (TicketSeatInquiryResult result : response.getTicketSeatInquiryResult()) {
-			System.out.println(result.getAirPlaneNo());
+			logTestDescription("回傳資料:\r" + "飛機代號:" + result.getAirPlaneNo() + "\r機位代碼:" + result.getSeatCode() + "\r座位號:" + result.getSeatNo());
 		}
+		logTestDescription("剩餘機位查詢測試結束");
 	}
 
 	/**
 	 * 剩餘訂位作業測試
 	 */
-	// @Test
+//	@Test
 	public void testTicketSeatOrder() {
 		final TicketSeatOrderResultRequest body = ObjectFactory.getInstance().createTicketSeatOrderResultRequest();
 		final TicketSeatOrderRequestResult request = ObjectFactory.getInstance().createTicketSeatOrderRequestResult();
@@ -57,13 +62,13 @@ public class WebServiceClinet {
 		request.setCustomerUsername("kerrigan");
 		request.setSeatCode("PNR100000001");
 		body.getTicketSeatOrderRequestResult().add(request);
+		logTestDescription("剩餘訂位作業測試開始");
+		logTestDescription("輸入參數:\r" + "旅客身份證字號:A123456789\r旅客姓名:kerrigan");
 		final TicketSeatOrderResultResponse response = service.ticketSeatOrder(body);
 		for (TicketSeatOrderResponseResult r : response.getTicketSeatOrderResponseResult()) {
-			System.out.println(r.getCustomerSn());
-			System.out.println(r.getCustomerUsername());
-			System.out.println(r.getCustomerId());
-			System.out.println(r.getCustomerStatus());
+			logTestDescription("回傳資料:\r" + "訂位代碼:" + r.getCustomerSn() + "\r旅客姓名:" + r.getCustomerUsername() + "\r旅客身份證字號:" + r.getCustomerId() + "\r訂位狀態:" + r.getCustomerStatus());
 		}
+		logTestDescription("剩餘機位查詢測試結束");
 	}
 
 	/**
@@ -73,37 +78,35 @@ public class WebServiceClinet {
 	public void testTicketSeatOrderInquiry() {
 		TicketSeatOrderInquiryRequest request = ObjectFactory.getInstance().createTicketSeatOrderInquiryRequest();
 		request.setCustomerId("A123456789");
+		// 此數字要看[剩餘訂位作業測試]所回傳的訂位代碼
 		request.setCustomerSn(new BigInteger("2"));
+		logTestDescription("訂位查詢測試開始");
+		logTestDescription("輸入參數:\r" + "旅客身份證字號:A123456789\r訂位序號:2");
 		for (TicketSeatOrderInquiryResponseResult response : service.ticketSeatOrderInquiry(request).getTicketSeatOrderInquiryResponseResult()) {
-			System.out.println(DATE_FORMATTER_PATTERN.format(xmlGregorianCalendarToDate(response.getAirPlaneDepartureTime())));
-			System.out.println(DATE_FORMATTER_PATTERN.format(xmlGregorianCalendarToDate(response.getAirPlaneArrivalTime())));
-			System.out.println(response.getAirPlaneNo());
-			System.out.println(response.getCabinClass());
-			System.out.println(response.getSeatNo());
+			logTestDescription("回傳資料:\r" + "起飛時間:" + DATE_FORMATTER_PATTERN.format(xmlGregorianCalendarToDate(response.getAirPlaneDepartureTime())) + "\r到達時間:" + DATE_FORMATTER_PATTERN.format(xmlGregorianCalendarToDate(response.getAirPlaneArrivalTime())) + "\r班機編號:" + response.getAirPlaneNo() + "\r班機艙等:" + response.getCabinClass() + "\r座位號:" + response.getSeatNo());
 		}
+		logTestDescription("訂位查詢測試結束");
 	}
 
 	/**
 	 * 剩餘機位查詢+訂位作業測試
 	 */
-	@Test
+	// @Test
 	public void finalTest() {
 		final TicketSeatInquiryResultResponse response = service.ticketSeatInquiry(createTicketSeatInquiryRequestforTest());
 		final TicketSeatOrderResultRequest body = ObjectFactory.getInstance().createTicketSeatOrderResultRequest();
-		for (TicketSeatInquiryResult result : response.getTicketSeatInquiryResult()) {
+		logTestDescription("剩餘機位查詢+訂位作業測試開始");
+		for (final TicketSeatInquiryResult result : response.getTicketSeatInquiryResult()) {
 			final TicketSeatOrderRequestResult request = ObjectFactory.getInstance().createTicketSeatOrderRequestResult();
 			request.setCustomerId("A123456789");
 			request.setCustomerUsername("kerrigan");
 			request.setSeatCode(result.getSeatCode());
 			body.getTicketSeatOrderRequestResult().add(request);
 		}
-		for (TicketSeatOrderResponseResult result : service.ticketSeatOrder(body).getTicketSeatOrderResponseResult()) {
-			System.out.println(result.getCustomerSn());
-			System.out.println(result.getCustomerUsername());
-			System.out.println(result.getCustomerId());
-			System.out.println(result.getCustomerStatus());
+		for (final TicketSeatOrderResponseResult result : service.ticketSeatOrder(body).getTicketSeatOrderResponseResult()) {
+			logTestDescription("回傳資料:\r" + "訂位代碼:" + result.getCustomerSn() + "\r旅客姓名:" + result.getCustomerUsername() + "\r旅客身份證字號:" + result.getCustomerId() + "\r訂位狀態:" + result.getCustomerStatus());
 		}
-		;
+		logTestDescription("剩餘機位查詢+訂位作業測試結束");
 	}
 
 	private TicketSeatInquiryRequest createTicketSeatInquiryRequestforTest() {
@@ -118,12 +121,8 @@ public class WebServiceClinet {
 	private Date xmlGregorianCalendarToDate(final XMLGregorianCalendar cal) {
 		return cal.toGregorianCalendar().getTime();
 	}
-	// public static void main(String[] args) throws MalformedURLException {
-	//
-	// ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "classpath*:appContext.xml" });
-	// TicketSeatInquiryPortType instance = (TicketSeatInquiryPortType) context.getBean("webServiceTicketClient");
-	// TicketSeatInquiryResultRequest request = new TicketSeatInquiryResultRequest();
-	// TicketSeatInquiryResultResponse response = instance.ticketSeatInquiryResult(request);
-	// System.out.println(response.getAirPlaneNo());
-	// }
+
+	public void logTestDescription(final String log) {
+		logger.info(log);
+	}
 }
