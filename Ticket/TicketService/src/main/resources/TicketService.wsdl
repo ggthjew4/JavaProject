@@ -1,0 +1,18 @@
+<wsdl:definitions
+	targetNamespace="http://www.bluetechnology.com.tw/Ticket/wsdl/Service/TicketService/v1-0"
+	xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:btwsdl="http://www.bluetechnology.com.tw/Ticket/wsdl/binding/TicketService/v1-0"
+	xmlns:sec="http://cxf.apache.org/configuration/security" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="TicketService">
+	
+	<wsdl:import location="TicketBinding.wsdl" namespace="http://www.bluetechnology.com.tw/Ticket/wsdl/binding/TicketService/v1-0" />
+
+		<!-- 從這裡為起點 -->
+	<wsdl:service name="TicketSoapHttpService">
+		<wsdl:port binding="btwsdl:TicketPortTypeHttpBinding" name="TicketSoapHttpPort"> <!-- 找28行的binding -->
+			<wsdlsoap:address
+				location="http://127.0.0.1:8089/TicketService/TicketSoapHttpService" /><!-- 
+				這是要呼叫的網址 -->
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

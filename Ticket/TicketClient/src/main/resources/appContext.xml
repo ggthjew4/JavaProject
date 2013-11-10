@@ -10,19 +10,21 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	default-dependency-check="none" default-lazy-init="false">
 
 	<context:component-scan base-package="tw.com.bluetechnology.ticket" />
-
+    <!-- WebService Clinet 主設定 -->
 	<jaxws:client id="webServiceTicketClient"
 		serviceClass="tw.com.bluetechnology.ticket.wsdl.ticketservice.v1_0.TicketPortType"
 		address="http://127.0.0.1:8089/TicketService/TicketSoapHttpService?wsdl"
-		endpointName="TicketSoapHttpPort" serviceName="ns1:TicketSoapHttpService"
-		wsdlLocation="Ticket.wsdl">
+		endpointName="TicketSoapHttpPort" serviceName="ns1:TicketSoapHttpService">
 		<jaxws:outInterceptors>
 			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor">
 				<constructor-arg>
 					<map>
 						<entry key="action" value="UsernameToken" />
+						<!-- 帳號 -->
 						<entry key="user" value="kerrigan" />
+						<!-- 密碼類型 -->
 						<entry key="passwordType" value="PasswordDigest" />
+						<!-- ws-security callback -->
 						<entry key="passwordCallbackClass"
 							value="tw.com.bluetechnology.ticket.security.ClientPasswordCallback" />
 					</map>

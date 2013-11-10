@@ -29,6 +29,11 @@ import tw.com.bluetechnology.ticket.xsd.ticketservice.v1_0.TicketSeatOrderResult
 @ContextConfiguration(locations = { "classpath:appContext.xml" })
 /**
  * WebService Spring Class 測試主程式
+ * @see TicketSeatInquiryResultResponse
+ * @see TicketSeatInquiryResult
+ * @see TicketSeatOrderResultRequest
+ * @see TicketSeatOrderRequestResult
+ * @see TicketSeatOrderResultResponse
  * @author kerrigan
  */
 public class WebServiceClinet {
@@ -54,7 +59,7 @@ public class WebServiceClinet {
 	/**
 	 * 剩餘訂位作業測試
 	 */
-//	@Test
+	// @Test
 	public void testTicketSeatOrder() {
 		final TicketSeatOrderResultRequest body = ObjectFactory.getInstance().createTicketSeatOrderResultRequest();
 		final TicketSeatOrderRequestResult request = ObjectFactory.getInstance().createTicketSeatOrderRequestResult();
@@ -109,6 +114,11 @@ public class WebServiceClinet {
 		logTestDescription("剩餘機位查詢+訂位作業測試結束");
 	}
 
+	/**
+	 * 建立測試用{@link TicketSeatInquiryRequest}(班機查詢作業測試)資料
+	 * 
+	 * @return {@link TicketSeatInquiryRequest}
+	 */
 	private TicketSeatInquiryRequest createTicketSeatInquiryRequestforTest() {
 		final TicketSeatInquiryRequest requestObject = ObjectFactory.getInstance().createTicketSeatInquiryRequest();
 		requestObject.setAirPlaneClass("FIRST");
@@ -118,10 +128,20 @@ public class WebServiceClinet {
 		return requestObject;
 	}
 
+	/**
+	 * 轉換{@link XMLGregorianCalendar} to ${@link Date}物件
+	 * 
+	 * @param 需解析的{@link XMLGregorianCalendar}物件
+	 * @return {@link TicketSeatInquiryRequest}
+	 */
 	private Date xmlGregorianCalendarToDate(final XMLGregorianCalendar cal) {
 		return cal.toGregorianCalendar().getTime();
 	}
 
+	/**
+	 * 紀錄測試過程紀錄
+	 * @param log 紀錄內容{@link String}
+	 */
 	public void logTestDescription(final String log) {
 		logger.info(log);
 	}

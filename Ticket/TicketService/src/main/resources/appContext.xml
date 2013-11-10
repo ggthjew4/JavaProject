@@ -11,15 +11,16 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"
 	<import resource="classpath:META-INF/cxf/cxf.xml" />
 	<import resource="classpath*:META-INF/cxf/cxf-extension-*.xml" />
 	<!-- Hook up the web service -->
+	<!-- ticketPort 相對應的實作類別 -->
 	<bean id="ticketPort"
 		class="tw.com.bluetechnology.ticket.wsdl.ticketservice.v1_0.impl.TicketPortTypeImpl" />
+	<!-- ws security callback主程式 -->
 	<bean id="servciePasswordCallback" class="tw.com.bluetechnology.ticket.security.ServicePasswordCallback" />
 
 	<jaxws:endpoint id="ws-example" implementor="#ticketPort"
 		implementorClass="tw.com.bluetechnology.ticket.wsdl.ticketservice.v1_0.impl.TicketPortTypeImpl"
 		xmlns:ns1="http://www.bluetechnology.com.tw/Ticket/wsdl/TicketService/v1-0"
-		serviceName="ns1:TicketSoapHttpService" address="/TicketSoapHttpService"
-		wsdlLocation="Ticket.wsdl">
+		serviceName="ns1:TicketSoapHttpService" address="/TicketSoapHttpService">
 		<jaxws:inInterceptors>
 			<bean class="org.apache.cxf.binding.soap.saaj.SAAJInInterceptor" />
 			<bean class="org.apache.cxf.ws.security.wss4j.WSS4JInInterceptor">
@@ -36,6 +37,7 @@ http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"
 		</jaxws:inInterceptors>
 	</jaxws:endpoint>
 
+<!-- mySql 資料庫dataSourse -->
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />

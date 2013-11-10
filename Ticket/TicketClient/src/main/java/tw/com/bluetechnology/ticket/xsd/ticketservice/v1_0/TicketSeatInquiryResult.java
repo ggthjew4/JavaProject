@@ -1,4 +1,3 @@
-
 package tw.com.bluetechnology.ticket.xsd.ticketservice.v1_0;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -7,11 +6,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ticketSeatInquiryResult element declaration.
+ * <p>
+ * Java class for ticketSeatInquiryResult element declaration.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;element name="ticketSeatInquiryResult">
@@ -32,91 +32,86 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "airPlaneNo",
-    "seatCode",
-    "seatNo"
-})
+@XmlType(name = "", propOrder = { "airPlaneNo", "seatCode", "seatNo" })
+/**
+ * 班機剩餘座位查詢結果物件
+ * @author kerrigan
+ */
 @XmlRootElement(name = "ticketSeatInquiryResult")
 public class TicketSeatInquiryResult {
-
-    @XmlElement(required = true)
-    protected String airPlaneNo;
-    @XmlElement(required = true)
-    protected String seatCode;
-    @XmlElement(required = true)
-    protected String seatNo;
-
-    /**
-     * Gets the value of the airPlaneNo property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+	/**
+     * 班機代號
      */
-    public String getAirPlaneNo() {
-        return airPlaneNo;
-    }
-
-    /**
-     * Sets the value of the airPlaneNo property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+	@XmlElement(required = true)
+	protected String	airPlaneNo;
+	/**
+     * 座位代號
      */
-    public void setAirPlaneNo(String value) {
-        this.airPlaneNo = value;
-    }
-
-    /**
-     * Gets the value of the seatCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+	@XmlElement(required = true)
+	protected String	seatCode;
+	/**
+     * 座位編號
      */
-    public String getSeatCode() {
-        return seatCode;
-    }
+	@XmlElement(required = true)
+	protected String	seatNo;
 
-    /**
-     * Sets the value of the seatCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setSeatCode(String value) {
-        this.seatCode = value;
-    }
+	/**
+	 * Gets the value of the airPlaneNo property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getAirPlaneNo() {
+		return airPlaneNo;
+	}
 
-    /**
-     * Gets the value of the seatNo property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getSeatNo() {
-        return seatNo;
-    }
+	/**
+	 * Sets the value of the airPlaneNo property.
+	 * 
+	 * @param value allowed object is {@link String }
+	 * 
+	 */
+	public void setAirPlaneNo(String value) {
+		this.airPlaneNo = value;
+	}
 
-    /**
-     * Sets the value of the seatNo property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setSeatNo(String value) {
-        this.seatNo = value;
-    }
+	/**
+	 * Gets the value of the seatCode property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getSeatCode() {
+		return seatCode;
+	}
 
+	/**
+	 * Sets the value of the seatCode property.
+	 * 
+	 * @param value allowed object is {@link String }
+	 * 
+	 */
+	public void setSeatCode(String value) {
+		this.seatCode = value;
+	}
+
+	/**
+	 * Gets the value of the seatNo property.
+	 * 
+	 * @return possible object is {@link String }
+	 * 
+	 */
+	public String getSeatNo() {
+		return seatNo;
+	}
+
+	/**
+	 * Sets the value of the seatNo property.
+	 * 
+	 * @param value allowed object is {@link String }
+	 * 
+	 */
+	public void setSeatNo(String value) {
+		this.seatNo = value;
+	}
 }

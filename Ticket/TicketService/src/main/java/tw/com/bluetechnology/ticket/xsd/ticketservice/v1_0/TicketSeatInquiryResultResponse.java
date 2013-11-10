@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * 剩餘機位查詢request
+ * 剩餘機位查詢Response
  * 
  * <p>Java class for ticketSeatInquiryResultResponse complex type.
  * 
