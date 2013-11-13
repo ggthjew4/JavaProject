@@ -14,7 +14,7 @@
 
 		<wsdl:operation name="ticketSeatInquiry">
 			<wsdlsoap:operation
-				soapAction="http://www.blueTechnology.com.tw/Ticket/wsdl/TicketService/v1-0/ticketSeatInquiry"
+				soapAction="http://www.bluetechnology.com.tw/Ticket/wsdl/TicketService/v1-0/ticketSeatInquiry"
 				style="document" />
 			<wsdl:input>
 				<wsdlsoap:body parts="body" use="literal" />
@@ -26,7 +26,7 @@
 
 		<wsdl:operation name="ticketSeatOrder">
 			<wsdlsoap:operation
-				soapAction="http://www.blueTechnology.com.tw/Ticket/wsdl/TicketService/v1-0/ticketSeatOrder"
+				soapAction="http://www.bluetechnology.com.tw/Ticket/wsdl/TicketService/v1-0/ticketSeatOrder"
 				style="document" />
 			<wsdl:input>
 				<wsdlsoap:body parts="body" use="literal" />
@@ -38,7 +38,7 @@
 
 		<wsdl:operation name="ticketSeatOrderInquiry">
 			<wsdlsoap:operation
-				soapAction="http://www.blueTechnology.com.tw/Ticket/wsdl/TicketService/v1-0/ticketSeatOrderInquiry"
+				soapAction="http://www.bluetechnology.com.tw/Ticket/wsdl/TicketService/v1-0/ticketSeatOrderInquiry"
 				style="document" />
 			<wsdl:input>
 				<wsdlsoap:body parts="body" use="literal" />

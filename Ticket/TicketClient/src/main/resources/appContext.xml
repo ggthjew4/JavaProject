@@ -10,7 +10,7 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	default-dependency-check="none" default-lazy-init="false">
 
 	<context:component-scan base-package="tw.com.bluetechnology.ticket" />
-    <!-- WebService Clinet 主設定 -->
+    <!-- WebService Clinet Http transport主設定 -->
 	<jaxws:client id="webServiceTicketClient"
 		serviceClass="tw.com.bluetechnology.ticket.wsdl.ticketservice.v1_0.TicketPortType"
 		address="http://127.0.0.1:8089/TicketService/TicketSoapHttpService?wsdl"
