@@ -1,4 +1,4 @@
-package com.bluetechnology.test.generices;
+package com.bluetechnology.test.Generices;
 
 import java.util.Iterator;
 import java.util.Random;

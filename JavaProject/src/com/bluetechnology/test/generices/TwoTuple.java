@@ -1,4 +1,4 @@
-package com.bluetechnology.test.generices;
+package com.bluetechnology.test.Generices;
 
 public class TwoTuple<A, B> {
 	public final A	first;

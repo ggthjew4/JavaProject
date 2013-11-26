@@ -1,4 +1,4 @@
-package com.bluetechnology.test.generices;
+package com.bluetechnology.test.Generices;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

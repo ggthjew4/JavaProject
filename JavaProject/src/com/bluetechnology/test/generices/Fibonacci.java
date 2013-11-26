@@ -1,4 +1,4 @@
-package com.bluetechnology.test.generices;
+package com.bluetechnology.test.Generices;
 
 public class Fibonacci implements Generator<Integer> {
 	private int	count	= 0;

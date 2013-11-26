@@ -1,4 +1,4 @@
-package com.bluetechnology.test.generices;
+package com.bluetechnology.test.Generices;
 
 final class Latte extends Coffee {
 	

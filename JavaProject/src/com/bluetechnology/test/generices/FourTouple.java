@@ -1,4 +1,4 @@
-package com.bluetechnology.test.generices;
+package com.bluetechnology.test.Generices;
 
 public class FourTouple<A, B, C, D> extends ThreeTouple<A, B, C> {
 	final D	fourth;

@@ -1,4 +1,4 @@
-package com.bluetechnology.test.generices;
+package com.bluetechnology.test.Generices;
 
 public class BasicGenerator<T> implements Generator<T> {
 	private Class<T> type;

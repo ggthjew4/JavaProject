@@ -1,8 +1,8 @@
-package com.bluetechnology.test.generices;
+package com.bluetechnology.test.Generices;
 
 import java.util.EnumSet;
 import java.util.Set;
-import static com.bluetechnology.test.generices.WaterColors.*;
+import static com.bluetechnology.test.Generices.WaterColors.*;
 
 public class WatercolorSets {
 	/**
